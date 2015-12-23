@@ -95,7 +95,7 @@ public class VehicleIO extends UnicastRemoteObject implements VehicleDataService
 			int index=0;
 			for(VehicleInfoPO vehicle:vehicleInfoList){
 				if(vehicle.getMark().equals(id)){
-					vehicleInfoList.set(index, vehicle);
+					vehicleInfoList.set(index, po);
 					return true;
 				}
 				index++;

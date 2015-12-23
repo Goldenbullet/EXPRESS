@@ -21,11 +21,13 @@ import javax.swing.JTextField;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumnModel;
 
+import express.businessLogic.IDKeeper;
 import express.businessLogic.infoManageBL.Vehicle;
 import express.businesslogicService.businessSaleBLService.VehicleBusinessSaleblService;
 import express.data.vehicleAndDriverData.VehicleIO;
 import express.dataService.vehicleAndDriverDataService.VehicleDataService;
 import express.po.UserRole;
+import express.po.VehicleInfoPO;
 import express.presentation.mainUI.MainUIService;
 import express.presentation.mainUI.MyTableModel;
 import express.presentation.managerUI.managerMemberChangeUI;
@@ -37,6 +39,7 @@ public class businessVehicleUI extends JPanel {
 	
 	private VehicleBusinessSaleblService vbs;
 	private VehicleInfoVO vo;
+	private ArrayList<VehicleInfoVO> list;
 	
 	private JButton delete,change,add;
 	private JTextField idtf;
@@ -69,39 +72,28 @@ public class businessVehicleUI extends JPanel {
 		
 		
 		Class[] typeArray = { Boolean.class,Object.class,Object.class,Object.class,Object.class,Object.class,Object.class };
-		Object[] vehicle1 = {true,"001", "京v-02009", "营业厅A","5","是",changeunder };
-		Object[] uservehicle2 = { false,"002", "苏A-66666","中转中心B","5","否" ,changeunder };
-		Object vehicle[][] = { vehicle1, uservehicle2 };
-		data = vehicle;
-//		
-//		String[][] realdata = null;
-//		int index=0;
-//		//tableModel=new MyTableModel(data, header, typeArray);
-//		ArrayList<VehicleInfoVO> list=vbs.getVehicleInfoList();
-//		for (VehicleInfoVO infovo:list){
-//			index++;
-//			boolean hash=false;
-//			String use="是";
-//			if (infovo.getIsUsing()){
-//				hash=true;
-//			}
-//			if (hash){
-//				use="否";
-//			}
-//			
-//			String[] temp={infovo.getMark(),infovo.getLicense(),infovo.getOrgID(),
-//					Integer.toString(infovo.getUseYear()),use};
-//			realdata[index]=temp;
-//		}
-//		if (realdata==null){
-//			tableModel=new MyTableModel(data, header, typeArray);
-//			
-//		}
-//		else {tableModel=new MyTableModel(realdata, header, typeArray);
-//		}
+//		Object[] vehicle1 = {true,"001", "京v-02009", "营业厅A","5","是",changeunder };
+//		Object[] uservehicle2 = { false,"002", "苏A-66666","中转中心B","5","否" ,changeunder };
+//		Object vehicle[][] = { vehicle1, uservehicle2 };
+//		data = vehicle;
+		list=vbs.getVehicleInfoList();
+		if (list!=null){
+			data=new Object[list.size()][7];
+			for (int i=0;i<list.size();i++){
+				VehicleInfoVO temp=list.get(i);
+				data[i][0]=false;
+				data[i][1]=temp.getMark();
+				data[i][2]=temp.getLicense();
+				data[i][3]=temp.getOrgID();
+				data[i][4]=String.valueOf(temp.getUseYear());
+				data[i][5]=temp.getIsUsing()?"是":"否";
+				data[i][6]=changeunder;
+			}
+		}
+	
 		tableModel=new MyTableModel(data, header, typeArray);
 		table=new JTable(tableModel);
-		//table.getTableHeader().setReorderingAllowed(false);
+		table.getTableHeader().setReorderingAllowed(false);
 		table.setBounds(50, 60, 750, 600);
 		
 		iscb=new JComboBox(Using);
@@ -154,12 +146,12 @@ public class businessVehicleUI extends JPanel {
 			if (e.getSource()==delete){
 				for (int i = tableModel.getRowCount() - 1; i >= 0; i--) {
 					if ((boolean) tableModel.getValueAt(i, 0)) {
-						tableModel.removeRow(i);
-						vbs.removeVehicleInfo((String)table.getValueAt(i, 1));//逻辑层删除这条记录
-						vbs.endManage();//删除之后，逻辑层会调用数据层的writeall，更新所有记录	
 						
+					    vbs.removeVehicleInfo((String)tableModel.getValueAt(i, 1));//逻辑层删除这条记录
+					    tableModel.removeRow(i);
 					}
 				}
+				vbs.endManage();//删除之后，逻辑层会调用数据层的writeall，更新所有记录	
 				JOptionPane.showMessageDialog(null, "删除成功", "提示",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
@@ -170,9 +162,17 @@ public class businessVehicleUI extends JPanel {
 			}
 			else if (e.getSource()==change){
 				id = idtf.getText();
-				businessVehicleChangeUI vehicleChange = new businessVehicleChangeUI(
-						tableModel, id);
-				vehicleChange.setVisible(true);
+				if (vbs.isCarIDAvailable(id)){
+					businessVehicleChangeUI vehicleChange = new businessVehicleChangeUI(
+							tableModel, id);
+					vehicleChange.setVisible(true);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "车辆代号不存在", "提示",
+							JOptionPane.ERROR_MESSAGE);
+				
+				}
+				
 			}
 			else if (e.getSource()==table){
 				int row = table.getSelectedRow();
@@ -197,16 +197,20 @@ public class businessVehicleUI extends JPanel {
 							used=true;
 						}
 
-						//System.out.println(positioncb.getSelectedIndex()+1);
+					//	System.out.println("表格中的服役时间："+useYear);
+					//	System.out.println("NUM："+number);
 						
 
+						
 						vo = new VehicleInfoVO(name,number,orgID,realuseYear,used);
-						vbs.changeVehicleInfo(vo, id);
+						vbs.changeVehicleInfo(vo, name);
 						JOptionPane.showMessageDialog(null, "信息修改成功", "提示",
 								JOptionPane.INFORMATION_MESSAGE);
 						vbs.endManage();
+					
 					}
 				}
+				 
 			}
 			updateUI();
 		}

@@ -52,6 +52,7 @@ public class businessVehicleChangeUI extends JDialog{
 		JListener listener=new JListener();
 		vbs=new Vehicle();
 		vo=vbs.getVehicleInfo(id);
+	//	System.out.println("License：："+vo.getLicense());
 		
 		
 		
@@ -91,10 +92,14 @@ public class businessVehicleChangeUI extends JDialog{
 		useYearlabel.setBounds(leftside1, 125, 80, 30);
 		this.add(useYearlabel);
 		
-		useYeartf = new JTextField(vo.getUseYear());
+		useYeartf = new JTextField(String.valueOf(vo.getUseYear()));
 		useYeartf.setBounds(leftside2, 125, 100, 30);
 		useYeartf.setFont(f);
 		this.add(useYeartf);
+		
+		
+		// System.out.println("查到的服役时间"+String.valueOf(vo.getUseYear()));
+		
 
 		JLabel isUsinglabel = new JLabel("是否在使用");
 		isUsinglabel.setFont(font);
@@ -181,6 +186,7 @@ public class businessVehicleChangeUI extends JDialog{
 				 }
 			 }
 			 
+			
 		 }
 		dispose();
 	}

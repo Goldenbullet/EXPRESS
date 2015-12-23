@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -20,26 +21,23 @@ import express.businessLogic.infoManageBL.Driver;
 import express.businesslogicService.businessSaleBLService.DriverBusinessSaleblService;
 import express.presentation.mainUI.MainUIService;
 import express.presentation.mainUI.MyTableModel;
+import express.vo.DriverInfoVO;
+import express.vo.VehicleInfoVO;
 
 public class businessDriverUI extends JPanel{
 	private DriverBusinessSaleblService dbs;
+	private DriverInfoVO vo;
+	private ArrayList<DriverInfoVO> list;
 	
 	private MyTableModel tableModel;
 	private TableColumnModel tcm;
 	private JTable table;
 	
+	
 	private JButton delete,change,add;
 	private JTextField idtf;
 	private JComboBox gendercb;
 	
-    private String driverNumber;
-	private String orgID;
-	private String name;
-	private String date;
-	private String ID;
-	private String cellPhone;
-	private boolean sex;// men are true,women are false
-	private int deadline;
 
 	private String changeunder = "<HTML><U>修改</U></HTML>";
 	private String confirmunder = "<HTML><U>确认</U></HTML>";
@@ -48,6 +46,8 @@ public class businessDriverUI extends JPanel{
 			"出生日期","身份证号","联系方式","性别","行驶证期限","修改" };
 
 	private String[] genders={"男","女"};
+	
+	private String id;
 
 	public businessDriverUI(){
 		Font font = new Font("楷体", Font.PLAIN, 18);
@@ -65,10 +65,28 @@ public class businessDriverUI extends JPanel{
 		
 		Class[] typeArray = { Boolean.class,Object.class,Object.class,Object.class,
 				Object.class,Object.class,Object.class,JComboBox.class,Object.class,Object.class};
-		Object[] driver1 = {true,"001", "A01", "未加入底层","2015-06-07","11","11","男" ,"5",changeunder};
-		Object[] driver2 = { false,"002", "B01","未加入底层","2015-06-07","22" ,"22","女","6",changeunder };
-		Object vehicle[][] = { driver1, driver2 };
-		data = vehicle;
+//		Object[] driver1 = {true,"001", "A01", "未加入底层","2015-06-07","11","11","男" ,"5",changeunder};
+//		Object[] driver2 = { false,"002", "B01","未加入底层","2015-06-07","22" ,"22","女","6",changeunder };
+//		Object vehicle[][] = { driver1, driver2 };
+//		data = vehicle;
+		list=dbs.getDriverInfoList();
+		if (list!=null){
+			data=new Object[list.size()][10];
+			for (int i=0;i<list.size();i++){
+				DriverInfoVO temp=list.get(i);
+				data[i][0]=false;
+				data[i][1]=temp.getdriverNumber();
+				data[i][2]=temp.getbusinesshallNumber();
+				data[i][3]=temp.getname();
+				data[i][4]=temp.getdate();
+				data[i][5]=temp.getID();
+				data[i][6]=temp.getcellPhone();
+				data[i][7]=temp.getsex()?"男":"女";
+				data[i][8]=temp.getdeadline();
+				data[i][9]=changeunder;
+			}
+		}
+		
 		
 		tableModel=new MyTableModel(data, header, typeArray);
 		table=new JTable(tableModel);
@@ -124,10 +142,10 @@ public class businessDriverUI extends JPanel{
 			 if (e.getSource()==delete){
 					for (int i = tableModel.getRowCount() - 1; i >= 0; i--) {
 						if ((boolean) tableModel.getValueAt(i, 0)) {
-							tableModel.removeRow(i);
-							dbs.removeDriverInfo((String)table.getValueAt(i, 1));//逻辑层删除这条记录
-							dbs.endManage();//删除之后，逻辑层会调用数据层的writeall，更新所有记录	
 							
+							dbs.removeDriverInfo(( String )(table.getValueAt(i, 1)));//逻辑层删除这条记录
+							dbs.endManage();//删除之后，逻辑层会调用数据层的writeall，更新所有记录	
+							tableModel.removeRow(i);
 						}
 					}
 					JOptionPane.showMessageDialog(null, "删除成功", "提示",
@@ -138,10 +156,56 @@ public class businessDriverUI extends JPanel{
 				 DriverAddpanel.setVisible(true);
 			 }
 			 else if (e.getSource()==change){
-				 
+				 id = idtf.getText();
+				 if (dbs.isDriverIDAvailable(id)){
+					 businessDriverChangeUI driverChange = new businessDriverChangeUI(
+								tableModel, id);
+						driverChange.setVisible(true);
+				 }
+				 else {
+					 JOptionPane.showMessageDialog(null, "司机编号不存在", "提示",
+								JOptionPane.ERROR_MESSAGE);
+				 }
+				
 			 }else if (e.getSource()==table){
-				 
+				 int row = table.getSelectedRow();
+				 int col = table.getSelectedColumn();
+				 if (col == 9) {
+						if (tableModel.getValueAt(row, col).equals(changeunder)) {
+							tableModel.setrowedit();
+							tableModel.setValueAt(confirmunder, row, col);
+						} else if(tableModel.getValueAt(row, col).equals(confirmunder)) {
+							
+							tableModel.setrowunedit();
+							tableModel.setValueAt(changeunder, row, col);
+							
+							String driverNumber = (String) tableModel.getValueAt(row, 1);
+							String orgID = (String) tableModel.getValueAt(row, 2);
+							String name = (String) tableModel.getValueAt(row, 3);
+							String date = (String) tableModel.getValueAt(row, 4);
+							String ID = (String) tableModel.getValueAt(row, 5);
+							String cellPhone = (String) tableModel.getValueAt(row, 6);
+							String gender=(String)tableModel.getValueAt(row, 7);
+							String ddl=(String)tableModel.getValueAt(row, 8);
+							int deadline=Integer.parseInt(ddl);
+							
+						//	int deadline=special.intValue();
+							boolean sex;
+							if (gender=="男"){
+								sex=true;
+							}else {
+								sex=false;
+							}
+
+							vo = new DriverInfoVO(driverNumber,orgID,name,date,ID,cellPhone,sex,deadline);
+							dbs.changeDriverInfo(vo, driverNumber);
+							JOptionPane.showMessageDialog(null, "信息修改成功", "提示",
+									JOptionPane.INFORMATION_MESSAGE);
+							dbs.endManage();
+						}
+					}
 			 }
+			 updateUI();
 		}
 
 		@Override

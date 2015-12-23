@@ -137,7 +137,7 @@ public class businessVehicleAddUI extends JDialog{
 				
 				if (name.isEmpty()||number.isEmpty()){
 					JOptionPane.showMessageDialog(null, "信息未填写完整", "提示",
-							JOptionPane.ERROR_MESSAGE);
+							JOptionPane.WARNING_MESSAGE);
 				}
 				else {
 					
@@ -160,13 +160,17 @@ public class businessVehicleAddUI extends JDialog{
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "信息有误，添加失败", "提示",
-								JOptionPane.ERROR_MESSAGE);
+								JOptionPane.WARNING_MESSAGE);
 					}
 					
 				}
+				repaint();
 			}
-			
-			dispose();
+			else if (e.getSource()==exit){
+
+				
+			}
+			dispose();	
 		}
 
 		@Override
