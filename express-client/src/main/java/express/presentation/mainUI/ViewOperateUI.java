@@ -11,15 +11,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import express.businessLogic.statisticBL.OperateStatistic;
@@ -59,13 +62,15 @@ public class ViewOperateUI extends JPanel {
 		this.setBackground(Color.WHITE);
 		Font font2 = new Font("楷体", Font.BOLD, 18);
 		
-		JLabel title = new JLabel("经 营 状 态 表");
-		title.setBounds(320, 30, 200, 40);
+		JLabel title = new JLabel("经 营 状 态 表",JLabel.CENTER);
+		title.setBounds(50, 50, tablewidth, 30);
 		title.setFont(font2);
 		this.add(title);
 		
 		tabpane = new JTabbedPane(JTabbedPane.TOP);
 		initPanelList();
+		tabpane.setFont(f);
+		tabpane.setBackground(Color.white);
 		tabpane.setBounds(50, 80, tablewidth, tableheight);
 		this.add(tabpane);
 
@@ -74,6 +79,8 @@ public class ViewOperateUI extends JPanel {
 		excel = new JButton("导出到Excel");
 		excel.setBounds(250, 620, 150, 40);
 		excel.setVisible(true);
+		excel.setBackground(Color.WHITE);
+		excel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
 		excel.setFont(new Font("隶书", Font.PLAIN, 20));
 		excel.addMouseListener(listen);
 		this.add(excel);
@@ -81,6 +88,8 @@ public class ViewOperateUI extends JPanel {
 		exit = new JButton("返回");
 		exit.setBounds(430, 620, 150, 40);
 		exit.setVisible(true);
+		exit.setBackground(Color.WHITE);
+		exit.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
 		exit.setFont(new Font("隶书", Font.PLAIN, 20));
 		exit.addMouseListener(listen);
 		this.add(exit);
@@ -115,14 +124,20 @@ public class ViewOperateUI extends JPanel {
 		JTable operatetable = new JTable(tableModel);
 		operatetable.getTableHeader().setFont(f);
 		operatetable.setRowHeight(40);
-
+		DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+		//设置居中
+		r.setHorizontalAlignment(JLabel.CENTER);
+		operatetable.setDefaultRenderer(Object.class, r);
 		operatetable.setFont(f);
 		operatetable.setBounds(2, 0, tablewidth-7, tableheight-30);
 		// logtable.setBorder(BorderFactory.createEtchedBorder());
 		// this.add(logtable);
-
+		
 		JScrollPane scrollPane = new JScrollPane(operatetable);
 		scrollPane.setFont(font);
+		scrollPane.setOpaque(false);
+		scrollPane.getViewport().setOpaque(false);
+		scrollPane.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 		// scrollPane.setViewportView(logtable);
 		scrollPane.setBounds(2, 0, tablewidth-7, tableheight-30);
 		p.add(scrollPane);

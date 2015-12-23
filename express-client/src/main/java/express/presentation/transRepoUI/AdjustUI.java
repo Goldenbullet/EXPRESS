@@ -11,9 +11,13 @@ public class AdjustUI extends JPanel{
 
 	private JButton button_adjust;
 	
-	public AdjustUI(){
+	private MainUIService m;
+	
+	public AdjustUI(MainUIService main){
 		
 		setLayout(null);
+	    this.m=main;
+	    
 	    this.setBounds(0, 0, 850, 700);
 	    this.setBackground(Color.WHITE);
 	    

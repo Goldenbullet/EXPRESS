@@ -3,7 +3,6 @@ package express.businesslogicService.financialBLService;
 import java.util.ArrayList;
 
 import express.vo.BankAccountVO;
-import express.vo.InDocVO;
 import express.vo.InnerAccountVO;
 import express.vo.OrganizationVO;
 import express.vo.RepoInfoVO;
@@ -16,7 +15,7 @@ public interface InnerAccountBLService {
 	
 	public boolean initOrganizationInfo(OrganizationVO organization);
 	
-	public boolean initRepoInfo(RepoInfoVO repo);
+	public boolean initRepoInfo(RepoInfoVO vo);
 	
 	public boolean initVehicleInfo(VehicleInfoVO car);
 	
@@ -56,15 +55,19 @@ public interface InnerAccountBLService {
 	
 	public InnerAccountVO getPrevious(int index);
 	//人员信息检查
-	public boolean isUserIDAvailable(String id);//存在是false
+	public boolean isUserIDAvailable(String id);
 	
-	public boolean isCellPhoneAvailable(String phoneNum);//存在是true
+	public boolean isCellPhoneAvailable(String phoneNum);
 	
 	public boolean isJoininDateAvailable(String Date);
 	//机构信息检查
 	public boolean isOrgNameAvailable(String name);
 	
 	public boolean isOrgIDAvailable(String id);
+	//仓库信息检查
+	public boolean isNumValid(String num);
+	
+	public boolean checkReset(String orgID);
 	//车辆信息检查
 	public boolean isCarIDAvailable(String carID);
 	

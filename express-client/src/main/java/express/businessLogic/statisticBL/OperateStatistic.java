@@ -32,7 +32,6 @@ import express.po.ReceiveDocPO;
 import express.rmi.RMIClient;
 import express.vo.OperateFormVO;
 import express.vo.PaymentDocVO;
-import express.vo.ProfitFormVO;
 import express.vo.ReceiveDocVO;
 
 public class OperateStatistic implements OperateFinanceBLService {
@@ -99,17 +98,11 @@ public class OperateStatistic implements OperateFinanceBLService {
 		if (payList != null) {
 
 			for (PaymentDocVO vo : payList) {
-				String date = vo.getPaymentID();
-				date = date.substring(0, 10);
+				PaymentItem payment = vo.getPaymentList();
+				String date = payment.getDate();
 				if (date.compareTo(beginDate) >= 0
 						&& date.compareTo(endDate) <= 0) {
-					ArrayList<PaymentItem> list = vo.getPaymentList();
-					if(list != null){
-						for(int i = 0;i < list.size();i++){
-							selectPay.add(list.get(i));
-						}
-					}
-					
+					selectPay.add(payment);	
 				}
 			}
 		}
@@ -158,16 +151,11 @@ public class OperateStatistic implements OperateFinanceBLService {
 		if (payList != null) {
 
 			for (PaymentDocPO po : payList) {
-				String date = po.getPaymentID();
-				date = date.substring(0, 10);
+				PaymentItem payment = po.getPaymentList();
+				String date = payment.getDate();
 				if (date.compareTo(beginDate) >= 0
 						&& date.compareTo(endDate) <= 0) {
-					ArrayList<PaymentItem> list = po.getPaymentList();
-					if(list != null){
-						for(int i = 0;i < list.size();i++){
-							selectPay.add(list.get(i));
-						}
-					}
+					selectPay.add(payment);	
 				}
 			}
 		}

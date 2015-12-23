@@ -6,9 +6,9 @@ import express.vo.InDocVO;
 
 public interface InventoryRepoBLService {
 
-	public ArrayList<InDocVO> inventoryRepo();
+	public ArrayList<InDocVO> inventoryRepo(String orgID);
 	
-	public boolean exportExcel(ArrayList<InDocVO> repoCache);
+	public boolean exportExcel(String orgID);
 	
 	public void endRepoInventory();
 }

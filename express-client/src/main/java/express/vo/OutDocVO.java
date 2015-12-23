@@ -6,63 +6,69 @@ public class OutDocVO extends DocumentVO implements Serializable{
 	/**
 	 * 
 	 */
-	
-	private String title="出库单";
-	
 	private static final long serialVersionUID = 2093918775776937385L;
 	private String orderid;
 	private String date;
 	private String arrival;
 	private String transKind;
 	private String transNumber;
-	
-	public OutDocVO(String de,String d,String a,
-			String tK,String tN){
-		this.orderid=de;
-		this.date=d;
-		this.arrival=a;
-		this.transKind=tK;
-		this.transNumber=tN;
+	private String orgID;
+
+	public OutDocVO(String de, String d, String a, String tK, String tN,
+			String orgID) {
+		this.orderid = de;
+		this.date = d;
+		this.arrival = a;
+		this.transKind = tK;
+		this.transNumber = tN;
+		this.orgID = orgID;
 	}
-	
-	public String getOrderID(){
+
+	public String getOrderID() {
 		return orderid;
 	}
-	
-	public void setdeliveryNumber(String deliveryNumber){
-		this.orderid=deliveryNumber;
+
+	public void setdeliveryNumber(String deliveryNumber) {
+		this.orderid = deliveryNumber;
 	}
-	public String getdate(){
+
+	public String getOrgID() {
+		return orgID;
+	}
+
+	public void setOrgID(String id) {
+		orgID = id;
+	}
+
+	public String getdate() {
 		return date;
 	}
-	public void setdate(String date){
-		this.date=date;
+
+	public void setdate(String date) {
+		this.date = date;
 	}
-	public  String getarrival(){
+
+	public String getarrival() {
 		return arrival;
 	}
-	
-	public  void setarrival(String arrival){
-		this.arrival=arrival;
+
+	public void setarrival(String arrival) {
+		this.arrival = arrival;
 	}
-	public String gettransKind(){
+
+	public String gettransKind() {
 		return transKind;
 	}
-	
-	public void settransKind(String transKind){
-		this.transKind=transKind;
+
+	public void settransKind(String transKind) {
+		this.transKind = transKind;
 	}
-	
-	public String gettransNumber(){
+
+	public String gettransNumber() {
 		return transNumber;
 	}
-	
-	public void settransNumber(String transNumber){
-		this.transNumber=transNumber;
+
+	public void settransNumber(String transNumber) {
+		this.transNumber = transNumber;
 	}
-	
-	//add title
-		public String getTitle(){
-			return title;
-		}
 }

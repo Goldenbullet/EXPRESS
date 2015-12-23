@@ -118,8 +118,8 @@ public class Driver implements DriverBusinessSaleblService{
 		}catch(RemoteException e){
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
 
 	public boolean isIdentityIdAvailable(String id) {

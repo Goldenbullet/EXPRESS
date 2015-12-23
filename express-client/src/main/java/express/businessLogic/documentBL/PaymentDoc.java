@@ -30,196 +30,187 @@ import express.po.UserInfoPO;
 import express.po.UserRole;
 import express.rmi.RMIClient;
 import express.vo.PaymentDocVO;
-import express.vo.ShipmentDocTransCenterVO;
 
-public class PaymentDoc implements PaymentBLService{
-	
+public class PaymentDoc implements PaymentBLService {
+
 	PaymentDocDataService pay;
-	
-	public PaymentDoc(){
-		pay=RMIClient.getPaymentDocObject();
+
+	public PaymentDoc() {
+		pay = RMIClient.getPaymentDocObject();
 	}
 
-	public PaymentDocVO createPaymentDoc() {
-		TransCenterSaleShipmentDocblService tShip=new ShipmentDocController();
-		TransCenterTransferDocblService tTrans=new TransferDoc();
-		BusinessSaleShipmentDocumentblService bShip=new ShipmentDocBusinessHall();
-		
-		Date d=new Date();
-		DateFormat format=new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-		String dateFactory=format.format(d);
-		String currDate=dateFactory.substring(0, 7);
-		String date=dateFactory.substring(0, 10);
-		String cd=dateFactory.substring(5, 7);
-		if(cd.charAt(0)=='0')
-			cd=cd.substring(1, 2);
-		//如果是6月，将06变为6
-		
-		ArrayList<ShipmentDocTransCenterPO> list1=tShip.getAllShipmentDocPO();
-		ArrayList<TransferDocPO> list2=tTrans.getAllTransferDoc();
-		ArrayList<ShipmentDocBusinessHallPO> list3=bShip.getAllShipmentDoc();
-		
-		PaymentDocVO payment=new PaymentDocVO();
-		ArrayList<PaymentItem> payList=new ArrayList<PaymentItem>();
-		
-		double all=0;
+	public ArrayList<PaymentDocVO> createPaymentDoc() {
+		TransCenterSaleShipmentDocblService tShip = new ShipmentDocController();
+		TransCenterTransferDocblService tTrans = new TransferDoc();
+		BusinessSaleShipmentDocumentblService bShip = new ShipmentDocBusinessHall();
 
-		payment.setID(dateFactory);
-		//将日期设置为id
-		
-		//处理ShipmentDocTransCenterPO
-		if(!isEmpty(list1)){
-			
-			for(ShipmentDocTransCenterPO po:list1){
-				String dt=po.getDate();
-				if(dt.startsWith(currDate)){
-					
-					all+=po.getMoney();
-					
-					PaymentItem p=new PaymentItem(null,dt,null,
-							"运费",po.getShipmentID(),po.getMoney());
-					
-					payList.add(p);
+		Date d = new Date();
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+		String dateFactory = format.format(d);
+		String currDate = dateFactory.substring(0, 7);
+		String date = dateFactory.substring(0, 10);
+		String cd = dateFactory.substring(5, 7);
+		if (cd.charAt(0) == '0')
+			cd = cd.substring(1, 2);
+		// 如果是6月，将06变为6
+
+		ArrayList<ShipmentDocTransCenterPO> list1 = tShip.getAllShipmentDocPO();
+		ArrayList<TransferDocPO> list2 = tTrans.getAllTransferDoc();
+		ArrayList<ShipmentDocBusinessHallPO> list3 = bShip.getAllShipmentDoc();
+
+		ArrayList<PaymentDocVO> payList = new ArrayList<PaymentDocVO>();
+
+		// 处理ShipmentDocTransCenterPO
+		if (!isEmpty(list1)) {
+
+			for (ShipmentDocTransCenterPO po : list1) {
+				String dt = po.getDate();
+				if (dt.startsWith(currDate)) {
+
+					PaymentItem p = new PaymentItem(null, dt, null, "运费",
+							po.getShipmentID(), po.getMoney());
+					PaymentDocVO payment = new PaymentDocVO(p, null);
+					payList.add(payment);
 				}
 			}
-			
+
 		}
-		
-		//处理TransferDocPO
-		if(!isEmpty(list2)){
-			
-			for(TransferDocPO po:list2){
-				String dt=po.getdate();
-				if(dt.startsWith(currDate)){
-					
-					all+=po.getmoney();
-					
-					PaymentItem p=new PaymentItem(null,dt,null,
-							"运费",po.getTransDocID(),po.getmoney());
-					
-					payList.add(p);
+
+		// 处理TransferDocPO
+		if (!isEmpty(list2)) {
+
+			for (TransferDocPO po : list2) {
+				String dt = po.getdate();
+				if (dt.startsWith(currDate)) {
+
+					PaymentItem p = new PaymentItem(null, dt, null, "运费",
+							po.getTransDocID(), po.getmoney());
+					PaymentDocVO payment = new PaymentDocVO(p, null);
+					payList.add(payment);
 				}
 			}
-			
+
 		}
-		
-		//处理ShipmentDocBusinessHallPO
-		if(!isEmpty(list3)){
-			
-			for(ShipmentDocBusinessHallPO po:list3){
-				String dt=po.getDate();
-				if(dt.startsWith(currDate)){
-					
-					all+=po.getMoney();
-					
-					PaymentItem p=new PaymentItem(null,dt,null,
-							"运费",po.getShipmentID(),po.getMoney());
-					
-					payList.add(p);
+
+		// 处理ShipmentDocBusinessHallPO
+		if (!isEmpty(list3)) {
+
+			for (ShipmentDocBusinessHallPO po : list3) {
+				String dt = po.getDate();
+				if (dt.startsWith(currDate)) {
+
+					PaymentItem p = new PaymentItem(null, dt, null, "运费",
+							po.getShipmentID(), po.getMoney());
+					PaymentDocVO payment = new PaymentDocVO(p, null);
+					payList.add(payment);
 				}
 			}
-			
+
 		}
-		
-		//处理人员工资
-		StaffManageBLService staff=new StaffForManager();
-		ArrayList<UserInfoPO> userList=staff.getAllUserPO();
-		SalaryManagerBLService salary=new SalaryManager();
-		ArrayList<SalaryPO> sList=salary.getSalaryStrategyListPO();
-		
-		if(userList!=null&&userList.size()>0){
-			
-			for(UserInfoPO u:userList){
-				UserRole role=u.getPosition();
-				for(SalaryPO s:sList){
-					if(s.getPosition().equals(role)){
-						double sal=calSalary(u,s,currDate);
-						if(sal>0.0){
-							
-							all+=sal;
-							
-							PaymentItem p=new PaymentItem(null,date,null,
-									"人员工资",cd+"月份工资",sal);
-							
-							payList.add(p);
+
+		// 处理人员工资
+		StaffManageBLService staff = new StaffForManager();
+		ArrayList<UserInfoPO> userList = staff.getAllUserPO();
+		SalaryManagerBLService salary = new SalaryManager();
+		ArrayList<SalaryPO> sList = salary.getSalaryStrategyListPO();
+
+		if (userList != null && userList.size() > 0) {
+
+			for (UserInfoPO u : userList) {
+				UserRole role = u.getPosition();
+				if(sList != null){
+					for (SalaryPO s : sList) {
+						if (s.getPosition().equals(role)) {
+							double sal = calSalary(u, s, currDate);
+							if (sal > 0.0) {
+	
+								PaymentItem p = new PaymentItem(null, date, null,
+										"人员工资", cd + "月份工资", sal);
+								PaymentDocVO payment = new PaymentDocVO(p, null);
+								payList.add(payment);
+							}
 						}
 					}
 				}
 			}
 		}
-		
-		payment.setPaymentList(payList);
-		payment.setSum(all);
-		
-		return payment;
+
+		return payList;
 	}
-	
+
 	/**
 	 * 
 	 * @param list
 	 * @return 判断list是否为空
 	 */
-	
-	private boolean isEmpty(ArrayList<? extends DocumentPO> list){
-		if(list==null)
+
+	private boolean isEmpty(ArrayList<? extends DocumentPO> list) {
+		if (list == null)
 			return true;
-		if(list.size()==0)
+		if (list.size() == 0)
 			return true;
 		return false;
 	}
-	
-	private double calSalary(UserInfoPO u,SalaryPO s,String d){
-		if(s.getStrategy().equals(Strategy.FIXED))
+
+	private double calSalary(UserInfoPO u, SalaryPO s, String d) {
+		if (s.getStrategy().equals(Strategy.FIXED))
 			return s.getValue();
-		
-		if(s.getStrategy().equals(Strategy.PERCENT)){
-			double percent=s.getValue();
-			double sum=0;
-			String id=u.getID();
-			
-			GetReceiveDocBLService receive=new SumReceiveDoc();
-			ArrayList<ReceiveDocPO> list=receive.getAllReceiveDocPO();
-			
-			if(list!=null&&list.size()>0){
-				
-				for(ReceiveDocPO r:list){
-					if(r.getDeliverManID().equals(id)&&r.getReceiveDate().startsWith(d)){
-						sum+=r.getReceivePrice();
+
+		if (s.getStrategy().equals(Strategy.PERCENT)) {
+			double percent = s.getValue();
+			double sum = 0;
+			String id = u.getID();
+
+			GetReceiveDocBLService receive = new SumReceiveDoc();
+			ArrayList<ReceiveDocPO> list = receive.getAllReceiveDocPO();
+
+			if (list != null && list.size() > 0) {
+
+				for (ReceiveDocPO r : list) {
+					if (r.getDeliverManID().equals(id)
+							&& r.getReceiveDate().startsWith(d)) {
+						sum += r.getReceivePrice();
 					}
 				}
-				
-			}
-			return sum*percent;
-		}
-		
-		return 0;
-			
-	}
-	
-	public boolean addPaymentDoc(PaymentDocVO vo) {
-		
-		return true;
-	}
-	
-	public ArrayList<PaymentDocVO> getUnexamedPaymentDoc(){
-		try{
-		ArrayList<PaymentDocPO> list=pay.getAllPaymentDoc();
-		ArrayList<PaymentDocVO> unexam=new ArrayList<PaymentDocVO>();
-		
-		if(list==null)
-			return unexam;
-		
-		for(PaymentDocPO po:list){
-			if(!po.getState()){
-				PaymentDocVO vo=new PaymentDocVO(po.getPaymentList(),
-						po.getSum(),po.getPaymentID());
-				
-				unexam.add(vo);
-			}
-		}
-		return unexam;
 
-		}catch(Exception e){
+			}
+			return sum * percent;
+		}
+
+		return 0;
+	}
+
+	public boolean addPaymentDoc(PaymentDocVO vo) {
+		PaymentDocPO po = new PaymentDocPO(vo.getPaymentList(),
+				vo.getPaymentID());
+		try {
+			return pay.createPaymentDoc(po);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public ArrayList<PaymentDocVO> getUnexamedPaymentDoc() {
+		try {
+			ArrayList<PaymentDocPO> list = pay.getAllPaymentDoc();
+			ArrayList<PaymentDocVO> unexam = new ArrayList<PaymentDocVO>();
+
+			if (list == null)
+				return unexam;
+
+			for (PaymentDocPO po : list) {
+				if (!po.getState()) {
+					PaymentDocVO vo = new PaymentDocVO(po.getPaymentList(),
+							po.getPaymentID());
+
+					unexam.add(vo);
+				}
+			}
+			return unexam;
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -228,13 +219,13 @@ public class PaymentDoc implements PaymentBLService{
 	public PaymentDocVO getPaymentDoc(String id) {
 		try {
 			PaymentDocPO po = pay.getPaymentDoc(id);
-			
-			if(po==null)
+
+			if (po == null)
 				return null;
-			
+
 			PaymentDocVO vo = new PaymentDocVO(po.getPaymentList(),
-					po.getSum(), po.getPaymentID());
-			
+					po.getPaymentID());
+
 			return vo;
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -244,22 +235,27 @@ public class PaymentDoc implements PaymentBLService{
 	}
 
 	public boolean checkDateAvailable(String date) {
-		Date d=new Date();
-		DateFormat format=new SimpleDateFormat("yyyy-MM");
-		String currDate=format.format(d);
+		Date d = new Date();
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String currDate = format.format(d);
+		String month = currDate.substring(0, 7);
 		
-		date = date.substring(0, 7);
-		
-		if(currDate.equals(date))
-			return true;
+		String m = date.substring(0, 7);
+
+		if (month.equals(m)){
+			if(currDate.compareTo(date) < 0)
+				return false;
+			else
+				return true;
+		}
 		else
 			return false;
 	}
 
 	public void endPaymentDoc() {
-		SysLog log=new SysLog();
+		SysLog log = new SysLog();
 		log.addSysLog("生成付款单");
-		
+
 		try {
 			pay.writeAllPaymentDoc();
 		} catch (RemoteException e) {
@@ -270,10 +266,10 @@ public class PaymentDoc implements PaymentBLService{
 
 	@Override
 	public boolean changePaymentDoc(PaymentDocVO vo, String id) {
-		
-		PaymentDocPO po=new PaymentDocPO(vo.getPaymentList(),
-				vo.getSum(),vo.getPaymentID());
-		
+
+		PaymentDocPO po = new PaymentDocPO(vo.getPaymentList(),
+				vo.getPaymentID());
+
 		try {
 			return pay.changePaymentDoc(po, id);
 		} catch (RemoteException e) {
@@ -285,23 +281,23 @@ public class PaymentDoc implements PaymentBLService{
 
 	@Override
 	public ArrayList<PaymentDocVO> getAllPaymentDoc() {
-		
+
 		try {
-			ArrayList<PaymentDocPO> list=pay.getAllPaymentDoc();
-			
-			if(list==null)
+			ArrayList<PaymentDocPO> list = pay.getAllPaymentDoc();
+
+			if (list == null)
 				return null;
-			if(list.size()==0)
+			if (list.size() == 0)
 				return null;
-			
-			ArrayList<PaymentDocVO> tList=new ArrayList<PaymentDocVO>();
-			for(PaymentDocPO po:list){
-				PaymentDocVO vo=new PaymentDocVO(po.getPaymentList(),
-						po.getSum(),po.getPaymentID());
-				
+
+			ArrayList<PaymentDocVO> tList = new ArrayList<PaymentDocVO>();
+			for (PaymentDocPO po : list) {
+				PaymentDocVO vo = new PaymentDocVO(po.getPaymentList(),
+						po.getPaymentID());
+
 				tList.add(vo);
 			}
-			
+
 			return tList;
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -312,7 +308,7 @@ public class PaymentDoc implements PaymentBLService{
 
 	@Override
 	public ArrayList<PaymentDocPO> getAllPaymentDocPO() {
-		
+
 		try {
 			return pay.getAllPaymentDoc();
 		} catch (RemoteException e) {
@@ -320,6 +316,21 @@ public class PaymentDoc implements PaymentBLService{
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public boolean checkMoney(String money) {
+		if(money == null)
+			return false;
+		char ch = money.charAt(0);
+		if(ch != '+' && (ch < '0' || ch > '9'))
+			return false;
+		for(int i = 1 ;i < money.length();i++){
+			ch = money.charAt(i);
+			if(ch > '9' || ch < '0')
+				return false;
+		}
+		return true;
 	}
 
 }

@@ -2,8 +2,6 @@ package express.po;
 
 import java.io.Serializable;
 
-import express.dataService.organizationDataService.OrganizationDataService;
-
 public class InDocPO extends DocumentPO implements Serializable{
 	/**
 	 * 
@@ -17,47 +15,53 @@ public class InDocPO extends DocumentPO implements Serializable{
 	private String orgid;
 	
 	
-	public InDocPO(String de,String d,String a,
-			RepoPosition repoPosition){
-		this.deliveryNumber=de;
-		this.date=d;
-		this.arrival=a;
-		this.repoPosition=repoPosition;
+	public InDocPO(String de, String d, String a, RepoPosition repoPosition,
+			String id) {
+		this.deliveryNumber = de;
+		this.date = d;
+		this.arrival = a;
+		this.repoPosition = repoPosition;
+		this.orgid = id;
 	}
-	
-	public void setOrgID(String orgid){
-		this.orgid=orgid;
+
+	public void setOrgID(String orgid) {
+		this.orgid = orgid;
 	}
-	
-	
-	
-	public String getdeliveryNumber(){
+
+	public String getOrgID() {
+		return orgid;
+	}
+
+	public String getdeliveryNumber() {
 		return deliveryNumber;
 	}
-	
-	public void setdeliveryNumber(String deliveryNumber){
-		this.deliveryNumber=deliveryNumber;
+
+	public void setdeliveryNumber(String deliveryNumber) {
+		this.deliveryNumber = deliveryNumber;
 	}
-	public String getdate(){
+
+	public String getdate() {
 		return date;
 	}
-	public void setdate(String date){
-		this.date=date;
+
+	public void setdate(String date) {
+		this.date = date;
 	}
-	public  String getarrival(){
+
+	public String getarrival() {
 		return arrival;
 	}
-	
-	public  void setarrival(String arrival){
-		this.arrival=arrival;
+
+	public void setarrival(String arrival) {
+		this.arrival = arrival;
 	}
-	
-	public RepoPosition getRepoPosition(){
+
+	public RepoPosition getRepoPosition() {
 		return repoPosition;
 	}
-	
-	public void setRepoPosition(RepoPosition repoPosition){
-		this.repoPosition=repoPosition;
+
+	public void setRepoPosition(RepoPosition repoPosition) {
+		this.repoPosition = repoPosition;
 	}
 	
 }

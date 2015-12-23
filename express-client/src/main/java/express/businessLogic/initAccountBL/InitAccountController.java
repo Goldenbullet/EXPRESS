@@ -9,38 +9,40 @@ import express.businessLogic.infoManageBL.BankAccount;
 import express.businessLogic.infoManageBL.OrgForManager;
 import express.businessLogic.infoManageBL.StaffForManager;
 import express.businessLogic.infoManageBL.Vehicle;
+import express.businessLogic.repoBL.RepoController;
 import express.businessLogic.syslogBL.SysLog;
 import express.businesslogicService.businessSaleBLService.VehicleBusinessSaleblService;
 import express.businesslogicService.financialBLService.BankAccountBLService;
 import express.businesslogicService.financialBLService.InnerAccountBLService;
 import express.businesslogicService.managerBLService.OrgManageBLService;
 import express.businesslogicService.managerBLService.StaffManageBLService;
+import express.businesslogicService.transcenterRepoBLService.InitRepoBLService;
 import express.po.InnerAccountPO;
 import express.vo.BankAccountVO;
-import express.vo.InDocVO;
 import express.vo.InnerAccountVO;
 import express.vo.OrganizationVO;
 import express.vo.RepoInfoVO;
 import express.vo.UserInfoVO;
 import express.vo.VehicleInfoVO;
 
-public class InitAccountController implements InnerAccountBLService{
+public class InitAccountController implements InnerAccountBLService {
 
 	StaffManageBLService staff;
 	OrgManageBLService org;
-	
+	InitRepoBLService repo;
 	VehicleBusinessSaleblService vehicle;
 	BankAccountBLService bank;
 	InitAccount innerAccount;
-	
-	public InitAccountController(){
-		staff=new StaffForManager();
-		org=new OrgForManager();
-		vehicle=new Vehicle();
-		bank=new BankAccount();
-		innerAccount=new InitAccount();
+
+	public InitAccountController() {
+		staff = new StaffForManager();
+		org = new OrgForManager();
+		repo = new RepoController();
+		vehicle = new Vehicle();
+		bank = new BankAccount();
+		innerAccount = new InitAccount();
 	}
-	
+
 	public boolean initUserInfo(UserInfoVO user) {
 		return staff.addUserFromManager(user);
 	}
@@ -49,8 +51,8 @@ public class InitAccountController implements InnerAccountBLService{
 		return org.addOrgInfo(organization);
 	}
 
-	public boolean initRepoInfo(RepoInfoVO repo) {
-		return false;
+	public boolean initRepoInfo(RepoInfoVO vo) {
+		return repo.initRepo(vo);
 	}
 
 	public boolean initVehicleInfo(VehicleInfoVO car) {
@@ -70,8 +72,8 @@ public class InitAccountController implements InnerAccountBLService{
 		return org.changeOrgInfo(organization, orgID);
 	}
 
-	public boolean changeRepoInfo(RepoInfoVO repo, String orgID) {
-		return false;
+	public boolean changeRepoInfo(RepoInfoVO vo, String orgID) {
+		return repo.changeRepoInfo(orgID, vo);
 	}
 
 	public boolean changeVehicleInfo(VehicleInfoVO car, String carID) {
@@ -91,7 +93,7 @@ public class InitAccountController implements InnerAccountBLService{
 	}
 
 	public boolean deleteRepoInfo(String orgID) {
-		return false;
+		return repo.deleteRepo(orgID);
 	}
 
 	public boolean deleteVehicleInfo(String carID) {
@@ -111,7 +113,7 @@ public class InitAccountController implements InnerAccountBLService{
 	}
 
 	public ArrayList<RepoInfoVO> getRepo() {
-		return null;
+		return repo.getAllRepo();
 	}
 
 	public ArrayList<VehicleInfoVO> getVehicle() {
@@ -121,8 +123,8 @@ public class InitAccountController implements InnerAccountBLService{
 	public ArrayList<BankAccountVO> getBankAccount() {
 		return bank.showAllBankAccount();
 	}
-	
-	public ArrayList<String> getInnerAccountNameList(){
+
+	public ArrayList<String> getInnerAccountNameList() {
 		return innerAccount.getInnerAccountNameList();
 	}
 
@@ -157,68 +159,64 @@ public class InitAccountController implements InnerAccountBLService{
 	public boolean isCarLicenseAvailable(String license) {
 		return vehicle.isCarLicenseAvailable(license);
 	}
+	
+	public boolean isNumValid(String num){
+		return repo.isNumValid(num);
+	}
+	
+	public boolean checkReset(String orgID){
+		return repo.checkReset(orgID);
+	}
 
 	public boolean checkDuplication(String name) {
 		return bank.checkDuplication(name);
 	}
-	
-	public boolean isMoneyValid(String money){
-		if(money==null)
-			return false;
-		
-		char c=money.charAt(0);
-		if(!((c<='9'&&c>='0')||c=='+'||c=='-'))
-			return false;
-		
-		for(int i=1;i<money.length();i++){
-			char ch=money.charAt(i);
-			if(ch>'9'||ch<'0')
-				return false;
-		}
-		return true;
+
+	public boolean isMoneyValid(String money) {
+		return bank.checkMoney(money);
 	}
 
 	public void recordStaffInfo() {
 		staff.recordStaffInfo();
-		
+
 	}
 
 	public void recordOrgInfo() {
 		org.recordOrgInfo();
-		
+
 	}
 
 	public void recordVehicleInfo() {
 		vehicle.recordVehicleInfo();
-		
+
 	}
 
 	public void recordBankAccount() {
 		bank.recordBankAccount();
-		
+
 	}
 
 	public void endInitial() {
-		InnerAccountPO inner=new InnerAccountPO();
-		Date d=new Date();
-		DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
-		String date=format.format(d);
-		
+		InnerAccountPO inner = new InnerAccountPO();
+		Date d = new Date();
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String date = format.format(d);
+
 		inner.setInnerAccountID(date);
 		inner.setUserInfo(staff.getAllUserPO());
 		inner.setOrganizationInfo(org.getAllOrgInfoPO());
-		
+
 		// TODO Auto-generated catch block
-		//inner.setRepoInfo(r);
-		
+		// inner.setRepoInfo(r);
+
 		inner.setVehicleInfo(vehicle.getVehicleInfoListPO());
 		inner.setBankAccountInfo(bank.getAllBankAccountPO());
-		
+
 		innerAccount.addInnerAccount(inner);
-		
-		SysLog log=new SysLog();
+
+		SysLog log = new SysLog();
 		log.addSysLog("期初建账");
-		
+
 		innerAccount.writeAllInnerAccount();
 	}
 }

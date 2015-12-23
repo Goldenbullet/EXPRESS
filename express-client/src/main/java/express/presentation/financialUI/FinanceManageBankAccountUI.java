@@ -1,6 +1,7 @@
 package express.presentation.financialUI;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -28,11 +29,11 @@ public class FinanceManageBankAccountUI extends JPanel {
 	private MainUIService m;
 	private JButton ok, cancel, find, exit;
 	private JTextField name, income, outcome, profit, search;
-	private JButton[] buttonList;
+	// private JButton[] buttonList;
 	private JTextField[] textList;
+	ArrayList<String> nameList = new ArrayList<String>();
 	private String account, inmoney, outmoney;
 	private JPanel bankAccount;
-	private JScrollPane scrollPane;
 
 	public FinanceManageBankAccountUI(MainUIService main) {
 
@@ -154,52 +155,59 @@ public class FinanceManageBankAccountUI extends JPanel {
 		// find.addMouseListener(listen);
 
 		bankAccount = new JPanel();
-		bankAccount.setBounds(350, 140, 440, 500);
+		bankAccount.setLocation(350, 140);
+		bankAccount.setPreferredSize(new Dimension(435, 490));
+		//bankAccount.setBounds(350, 140, 435, 1000);
 		bankAccount.setLayout(null);
-		scrollPane = new JScrollPane(bankAccount);
+		JScrollPane scrollPane = new JScrollPane(bankAccount);
 		scrollPane.setFont(font);
 		scrollPane.setBackground(Color.white);
 		scrollPane.setBorder(BorderFactory.createMatteBorder(3, 0, 3, 0,
 				Color.gray));
-		scrollPane.setBounds(350, 140, 440, 500);
+		scrollPane.setBounds(350, 140, 455, 500);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		this.add(scrollPane);
 	}
 
 	private void findBankAccount(String s) {
 		BankAccountBLService bank = new BankAccount();
 		ArrayList<BankAccountVO> list = bank.findBankAccount(s);
-		
+
 		bankAccount.removeAll();
-		if(list != null){
+		nameList.clear();
+		if (list != null) {
 			int len = list.size();
-			buttonList = new JButton[len];
+			// buttonList = new JButton[len];
 			textList = new JTextField[len];
-			for(int i = 0;i < len;i++){
-				
+			for (int i = 0; i < len; i++) {
+
 				BankAccountVO vo = list.get(i);
-				addLine(vo,i);
+				addLine(vo, i);
 			}
+			bankAccount.setPreferredSize(new Dimension(435, len * 75));
+			this.updateUI();
 		}
 	}
-	
-	private void addLine(BankAccountVO vo,int i){
-		
+
+	private void addLine(BankAccountVO vo, int i) {
+
 		Font f = new Font("楷体", Font.PLAIN, 18);
 		int len = 75 * i;
-		
+
 		JLabel nLabel = new JLabel("账户名");
 		nLabel.setBounds(5, 5 + len, 60, 30);
 		nLabel.setFont(f);
 		bankAccount.add(nLabel);
-		
+
 		JLabel mLabel = new JLabel();
 		mLabel.setBounds(5, 35 + len, 425, 40);
-		String title ="余额 ：" + vo.getBalance();
+		String title = "余额 ：" + vo.getBalance();
 		mLabel.setText(title);
 		mLabel.setFont(f);
-		mLabel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.GRAY));
+		mLabel.setBorder(BorderFactory
+				.createMatteBorder(0, 0, 2, 0, Color.GRAY));
 		bankAccount.add(mLabel);
-		
+
 		JTextField n = new JTextField();
 		n.setBounds(70, 5 + len, 280, 30);
 		n.setFont(f);
@@ -208,18 +216,28 @@ public class FinanceManageBankAccountUI extends JPanel {
 		n.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
 		bankAccount.add(n);
 		textList[i] = n;
-		
+
 		Action action = new Action();
-		
+
 		JButton change = new JButton("修改");
 		change.setBounds(350, 5 + len, 80, 30);
 		change.setBackground(Color.WHITE);
-		change.setActionCommand(i + "#" + vo.getName());
+		change.setActionCommand("#" + i);
 		change.setBorder(BorderFactory.createLineBorder(Color.gray, 2));
 		change.setFont(f);
 		change.addActionListener(action);
 		bankAccount.add(change);
-		buttonList[i] = change;
+		nameList.add(vo.getName());
+		// buttonList[i] = change;
+
+		JButton delete = new JButton("删除");
+		delete.setBounds(345, 5, 80, 30);
+		delete.setBackground(Color.WHITE);
+		delete.setActionCommand(i+"");
+		delete.setBorder(BorderFactory.createLineBorder(Color.gray, 2));
+		delete.setFont(f);
+		delete.addActionListener(action);
+		mLabel.add(delete);
 	}
 
 	private void addBankAccount() {
@@ -231,11 +249,11 @@ public class FinanceManageBankAccountUI extends JPanel {
 		double out = Double.parseDouble(outmoney);
 		String pro = String.valueOf(in - out);
 		profit.setText(pro);
-		
-		BankAccountVO vo = new BankAccountVO(account,in,out,in - out);
+
+		BankAccountVO vo = new BankAccountVO(account, in, out, in - out);
 		boolean succ = bank.addBankAccount(vo);
 		bank.endManage();
-		
+
 		if (succ) {
 			JOptionPane.showConfirmDialog(null, "新 建 成 功！", null,
 					JOptionPane.DEFAULT_OPTION,
@@ -250,37 +268,37 @@ public class FinanceManageBankAccountUI extends JPanel {
 	private boolean check() {
 
 		if (checkNotFill()) {
-			
-			JOptionPane.showConfirmDialog(null, "信 息 未 填！", null,
+
+			JOptionPane.showConfirmDialog(null, "您 还 有 信 息 未 填", null,
 					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 					null);
-			
+
 			return false;
 		} else {
-			boolean isValid = true,isDup = false;
-			
-			BankAccountBLService bank = new BankAccount();
-			
-			if(!bank.checkMoney(inmoney)){
-				income.setBackground(Color.RED);
-				isValid = false;
-			}
-			if(!bank.checkMoney(outmoney)){
-				outcome.setBackground(Color.RED);
-				isValid = false;
-			}
-			if(bank.checkDuplication(account)){
-				name.setBackground(Color.RED);
+			boolean isValid = true, isDup = false;
 
-				JOptionPane.showConfirmDialog(null, "账 户 重 名！", null,
-						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-						null);
+			BankAccountBLService bank = new BankAccount();
+
+			if (!bank.checkMoney(inmoney)) {
+				income.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+				isValid = false;
+			}
+			if (!bank.checkMoney(outmoney)) {
+				outcome.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+				isValid = false;
+			}
+			if (bank.checkDuplication(account)) {
+				name.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+
+				JOptionPane.showConfirmDialog(null, "账 户 重 名", null,
+						JOptionPane.DEFAULT_OPTION,
+						JOptionPane.WARNING_MESSAGE, null);
 				isDup = true;
 			}
-			if(!isValid){
-				JOptionPane.showConfirmDialog(null, "金 额 输 入 错 误！", null,
-						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-						null);
+			if (!isValid) {
+				JOptionPane.showConfirmDialog(null, "金 额 输 入 错 误", null,
+						JOptionPane.DEFAULT_OPTION,
+						JOptionPane.WARNING_MESSAGE, null);
 			}
 			return isValid && (!isDup);
 		}
@@ -288,16 +306,18 @@ public class FinanceManageBankAccountUI extends JPanel {
 
 	private boolean checkNotFill() {
 		boolean fill = false;
+		Color yellow = new Color(255,215,0);
+		
 		if (account.equals("")) {
-			name.setBackground(Color.YELLOW);
+			name.setBorder(BorderFactory.createLineBorder(yellow, 2));
 			fill = true;
 		}
 		if (inmoney.equals("")) {
-			income.setBackground(Color.YELLOW);
+			income.setBorder(BorderFactory.createLineBorder(yellow, 2));
 			fill = true;
 		}
 		if (outmoney.equals("")) {
-			outcome.setBackground(Color.YELLOW);
+			outcome.setBorder(BorderFactory.createLineBorder(yellow, 2));
 			fill = true;
 		}
 		return fill;
@@ -306,7 +326,7 @@ public class FinanceManageBankAccountUI extends JPanel {
 	private class Listener implements MouseListener {
 
 		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
+			
 			if (e.getSource() == cancel) {
 				name.setText("");
 				income.setText("");
@@ -319,15 +339,15 @@ public class FinanceManageBankAccountUI extends JPanel {
 				account = name.getText();
 				inmoney = income.getText();
 				outmoney = outcome.getText();
-				
-				if(check()){
+
+				if (check()) {
 					addBankAccount();
-					name.setBackground(Color.WHITE);
-					income.setBackground(Color.WHITE);
-					outcome.setBackground(Color.WHITE);
+					name.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+					income.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+					outcome.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 				}
 			} else if (e.getSource() == exit) {
-				
+				m.jumpToFinanceMenuUI();
 			}
 			repaint();
 		}
@@ -344,52 +364,65 @@ public class FinanceManageBankAccountUI extends JPanel {
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			
+
 		}
 	}
-	
+
 	private class Action implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+
 			String s = e.getActionCommand();
-			String[] source = s.split("#");
-			int i = Integer.parseInt(source[0]);
-			JTextField text = textList[i];
-			String n = "";
-			try{
-				
-				n = text.getText();
-				
-			}catch(Exception ex){
-				text.setBackground(Color.YELLOW);
-				
-				JOptionPane.showConfirmDialog(null, "账 户 名 未 填！", null,
-						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-						null);
-			}
 			BankAccountBLService bank = new BankAccount();
-			if(bank.checkDuplication(n)){
-				text.setBackground(Color.RED);
-				
-				JOptionPane.showConfirmDialog(null, "账 户 重 名！", null,
-						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-						null);
-			} else {
-				boolean succ = bank.changeBankAccount(source[1], n);
-				bank.endManage();
-				text.setBackground(Color.WHITE);
-				
-				if (succ) {
-					JOptionPane.showConfirmDialog(null, "修 改 成 功！", null,
+
+			if (s.startsWith("#")) {
+				s=s.substring(1);
+				int i=Integer.parseInt(s);
+				JTextField text = textList[i];
+				String n = "";
+
+				n = text.getText();
+				if (n.equals("")) {
+					text.setBorder(BorderFactory.createLineBorder(new Color(255,215,0), 1));
+
+					JOptionPane.showConfirmDialog(null, "账 户 名 未 填！", null,
 							JOptionPane.DEFAULT_OPTION,
-							JOptionPane.INFORMATION_MESSAGE, null);
+							JOptionPane.WARNING_MESSAGE, null);
 				} else {
-					JOptionPane.showConfirmDialog(null, "修 改 失 败！", null,
-							JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-							null);
+					if (bank.checkDuplication(n)) {
+						text.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+
+						JOptionPane.showConfirmDialog(null, "账 户 重 名！", null,
+								JOptionPane.DEFAULT_OPTION,
+								JOptionPane.WARNING_MESSAGE, null);
+					} else {
+
+						boolean succ = bank.changeBankAccount(nameList.get(i), n);
+						nameList.set(i, n);
+						bank.endManage();
+						text.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+
+						if (succ) {
+							JOptionPane.showConfirmDialog(null, "修 改 成 功！",
+									null, JOptionPane.DEFAULT_OPTION,
+									JOptionPane.INFORMATION_MESSAGE, null);
+						} else {
+							JOptionPane.showConfirmDialog(null, "修 改 失 败！",
+									null, JOptionPane.DEFAULT_OPTION,
+									JOptionPane.WARNING_MESSAGE, null);
+						}
+					}
 				}
+			} else {
+				int i = Integer.parseInt(s);
+				bank.removeBankAccount(nameList.get(i));
+				
+				bank.endManage();
+
+				String key = search.getText();
+				findBankAccount(key);
+				repaint();
 			}
 		}
 	}

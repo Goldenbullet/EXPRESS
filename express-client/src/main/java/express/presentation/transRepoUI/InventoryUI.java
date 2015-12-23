@@ -22,10 +22,12 @@ public class InventoryUI extends JPanel {
 
 	private JButton button_inventory;
 
+	private MainUIService m;
+
 	private JTable table;
 	private JScrollPane scrollPane;
 
-	public InventoryUI() {
+	public InventoryUI(MainUIService main) {
 
 		int textlength = 150;
 		int textwidth = 30;
@@ -36,6 +38,8 @@ public class InventoryUI extends JPanel {
 		Font f = new Font("仿宋", Font.PLAIN, 16);
 
 		setLayout(null);
+		this.m = main;
+
 		this.setBounds(0, 0, 850, 700);
 		this.setBackground(Color.WHITE);
 

@@ -40,7 +40,7 @@ public class DriverIO extends UnicastRemoteObject implements DriverDataService{
 		if(driverInfoList.size()>0){
 			
 			for(DriverInfoPO driver:driverInfoList){
-				if(driver.getID().equals(orgID)){
+				if(driver.getbusinesshallNumber().equals(orgID)){
 					selectList.add(driver);
 				}
 			}
@@ -63,7 +63,7 @@ public class DriverIO extends UnicastRemoteObject implements DriverDataService{
 	public DriverInfoPO getDriverInfo(String id) throws RemoteException{
 		if(driverInfoList.size()>0){
 			for(DriverInfoPO driver:driverInfoList){
-				if(driver.getID().equals(id)){
+				if(driver.getdriverNumber().equals(id)){
 					return driver;
 				}
 			}
@@ -75,7 +75,7 @@ public class DriverIO extends UnicastRemoteObject implements DriverDataService{
 	public boolean deleteDriverInfo(String id) throws RemoteException{
 		if(driverInfoList.size()>0){
 			for(DriverInfoPO driver:driverInfoList){
-				if(driver.getID().equals(id)){
+				if(driver.getdriverNumber().equals(id)){
 					driverInfoList.remove(driver);
 					return true;
 				}
@@ -89,8 +89,8 @@ public class DriverIO extends UnicastRemoteObject implements DriverDataService{
 		if(driverInfoList.size()>0){
 			int index=0;
 			for(DriverInfoPO driver:driverInfoList){
-				if(driver.getID().equals(id)){
-					driverInfoList.set(index,driver);
+				if(driver.getdriverNumber().equals(id)){
+					driverInfoList.set(index,po);
 					return true;
 				}
 				index++;
@@ -102,7 +102,7 @@ public class DriverIO extends UnicastRemoteObject implements DriverDataService{
 	public boolean isDriverIDAvailable(String driverID) throws RemoteException{
 		if(driverInfoList.size()>0){
 			for(DriverInfoPO driver:driverInfoList){
-				if(driver.getID().equals(driverID)){
+				if(driver.getdriverNumber().equals(driverID)){
 					
 					return true;
 				}

@@ -171,7 +171,7 @@ public class BankAccount implements BankAccountBLService{
 		if(ch != '+' && (ch < '0' || ch > '9'))
 			return false;
 		for(int i = 1 ;i < money.length();i++){
-			ch = money.charAt(1);
+			ch = money.charAt(i);
 			if(ch > '9' || ch < '0')
 				return false;
 		}

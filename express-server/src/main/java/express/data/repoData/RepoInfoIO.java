@@ -7,20 +7,21 @@ import java.util.ArrayList;
 
 import express.data.IOHelper.IOHelper;
 import express.dataService.repoDataService.RepoDataService;
+import express.po.Area;
 import express.po.RepoInfoPO;
 import express.po.RepoPosition;
 
-public class RepoInfoIO extends UnicastRemoteObject implements RepoDataService{
+public class RepoInfoIO extends UnicastRemoteObject implements RepoDataService {
 
-	String filename="SerializableData/RepoInfo.ser";
+	String filename = "SerializableData/RepoInfo.ser";
 	ArrayList<RepoInfoPO> repoList;
-	
-	public  RepoInfoIO() throws RemoteException {
+
+	public RepoInfoIO() throws RemoteException {
 		super();
-		IOHelper io=new IOHelper();
-		repoList=new ArrayList<RepoInfoPO>();
+		IOHelper io = new IOHelper();
+		repoList = new ArrayList<RepoInfoPO>();
 		try {
-			repoList=(ArrayList<RepoInfoPO>)io.readFromDisk(filename);
+			repoList = (ArrayList<RepoInfoPO>) io.readFromDisk(filename);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -36,9 +37,9 @@ public class RepoInfoIO extends UnicastRemoteObject implements RepoDataService{
 
 	@Override
 	public boolean deleteRepo(String orgID) throws RemoteException {
-		if(repoList.size()>0){
-			for(RepoInfoPO repo:repoList)
-				if(repo.getCity().equals(orgID)){
+		if (repoList.size() > 0) {
+			for (RepoInfoPO repo : repoList)
+				if (repo.getCity().equals(orgID)) {
 					repoList.remove(repo);
 					return true;
 				}
@@ -48,9 +49,9 @@ public class RepoInfoIO extends UnicastRemoteObject implements RepoDataService{
 
 	@Override
 	public RepoInfoPO getRepo(String orgID) throws RemoteException {
-		if(repoList.size()>0){
-			for(RepoInfoPO repo:repoList)
-				if(repo.getCity().equals(orgID))
+		if (repoList.size() > 0) {
+			for (RepoInfoPO repo : repoList)
+				if (repo.getCity().equals(orgID))
 					return repo;
 		}
 		return null;
@@ -59,10 +60,22 @@ public class RepoInfoIO extends UnicastRemoteObject implements RepoDataService{
 	@Override
 	public boolean deleteBlock(String orgID, RepoPosition position)
 			throws RemoteException {
-		if(repoList.size()>0){
-			for(RepoInfoPO repo:repoList)
-				if(repo.getCity().equals(orgID)){
+		if (repoList.size() > 0) {
+			for (RepoInfoPO repo : repoList)
+				if (repo.getCity().equals(orgID)) {
 					repo.deleteRepoPosition(position);
+					if (position.getblock().equals(Area.AIR)) {
+						repo.changeAirSum(-1);
+						repo.changeRepoSum(-1);
+					} else if (position.getblock().equals(Area.TRAIN)) {
+						repo.changeTrainSum(-1);
+						repo.changeRepoSum(-1);
+					} else if (position.getblock().equals(Area.TRAIN)) {
+						repo.changeTruckSum(-1);
+						repo.changeRepoSum(-1);
+					} else {
+						repo.changeRepoSum(-1);
+					}
 					return true;
 				}
 		}
@@ -71,9 +84,9 @@ public class RepoInfoIO extends UnicastRemoteObject implements RepoDataService{
 
 	@Override
 	public boolean deleteBlock(String orgID, int index) throws RemoteException {
-		if(repoList.size()>0){
-			for(RepoInfoPO repo:repoList)
-				if(repo.getCity().equals(orgID)){
+		if (repoList.size() > 0) {
+			for (RepoInfoPO repo : repoList)
+				if (repo.getCity().equals(orgID)) {
 					repo.deleteRepoPosition(index);
 					return true;
 				}
@@ -82,11 +95,24 @@ public class RepoInfoIO extends UnicastRemoteObject implements RepoDataService{
 	}
 
 	@Override
-	public boolean addBlock(String orgID,RepoPosition position) throws RemoteException {
-		if(repoList.size()>0){
-			for(RepoInfoPO repo:repoList)
-				if(repo.getCity().equals(orgID)){
+	public boolean addBlock(String orgID, RepoPosition position)
+			throws RemoteException {
+		if (repoList.size() > 0) {
+			for (RepoInfoPO repo : repoList)
+				if (repo.getCity().equals(orgID)) {
 					repo.addRepoPosition(position);
+					if (position.getblock().equals(Area.AIR)) {
+						repo.changeAirSum(1);
+						repo.changeRepoSum(1);
+					} else if (position.getblock().equals(Area.TRAIN)) {
+						repo.changeTrainSum(1);
+						repo.changeRepoSum(1);
+					} else if (position.getblock().equals(Area.TRAIN)) {
+						repo.changeTruckSum(1);
+						repo.changeRepoSum(1);
+					} else {
+						repo.changeRepoSum(1);
+					}
 					return true;
 				}
 		}
@@ -95,7 +121,7 @@ public class RepoInfoIO extends UnicastRemoteObject implements RepoDataService{
 
 	@Override
 	public ArrayList<RepoInfoPO> getAllRepo() throws RemoteException {
-		if(repoList.size()>0)
+		if (repoList.size() > 0)
 			return repoList;
 		else
 			return null;
@@ -103,12 +129,12 @@ public class RepoInfoIO extends UnicastRemoteObject implements RepoDataService{
 
 	@Override
 	public boolean writeAllRepo() throws RemoteException {
-		IOHelper io=new IOHelper();
+		IOHelper io = new IOHelper();
 		try {
 			io.writeToDisk(filename, repoList);
 			return true;
 		} catch (IOException e) {
-			
+
 			return false;
 		}
 	}

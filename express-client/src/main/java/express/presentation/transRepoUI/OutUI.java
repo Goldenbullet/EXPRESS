@@ -29,12 +29,13 @@ public class OutUI extends JPanel {
 	private JTextField textArea1,textArea4,textArea5,textArea4_1,datetf;
 	private String number, date, arrival, district, row, shelf, position;
 	private String transmode;
+	private MainUIService m;
 	private DateChooser datechooser;
 	private JComboBox tranway,combobox;
 	
 	private JLabel label2_1;
 	
-	public OutUI() {
+	public OutUI(MainUIService main) {
 
 		int textlength = 150;
 		int textwidth = 30;
@@ -46,6 +47,8 @@ public class OutUI extends JPanel {
 		Font f = new Font("仿宋", Font.PLAIN, 16);
 
 		setLayout(null);
+		this.m = main;
+
 		this.setBounds(0, 0, 850, 700);
 		this.setBackground(Color.WHITE);
 
