@@ -33,6 +33,9 @@ public class ArrivalDocTransCenter implements TransCenterArrivalDocblService{
 				return false;
 			}
 				
+			
+			
+			
 			rmiobj.createArrivalDoc(po);
 			String orderId=vo.getOrderID();
 			

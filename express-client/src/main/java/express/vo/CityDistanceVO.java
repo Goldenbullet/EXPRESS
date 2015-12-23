@@ -4,13 +4,12 @@ public class CityDistanceVO {
 	private String city1;
 	private String city2;
 	private double distance;
-	private String distanceID;
+
 	
-	public CityDistanceVO(String city1,String city2,double distance,String distanceID){
+	public CityDistanceVO(String city1,String city2,double distance){
 		this.city1 = city1;
 		this.city2 = city2;
 		this.distance = distance;
-		this.distanceID=distanceID;
 	}
 	
 	public String getCity1(){
@@ -39,10 +38,5 @@ public class CityDistanceVO {
 		this.distance = distance;
 		return false;
 	}
-	public String getID(){
-		return distanceID;
-	}
-	public void setID(String id){
-		distanceID=id;
-	}
+
 }

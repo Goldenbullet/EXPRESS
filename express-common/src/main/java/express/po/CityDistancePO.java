@@ -6,17 +6,16 @@ public class CityDistancePO implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4335918348452469653L;
+	private static final long serialVersionUID = -1329628118061681240L;
 	private String city1;
 	private String city2;
 	private double distance;
-	private String distanceID;
+
 	
-	public CityDistancePO(String city1,String city2,double distance,String distanceID){
+	public CityDistancePO(String city1,String city2,double distance){
 		this.city1 = city1;
 		this.city2 = city2;
 		this.distance = distance;
-		this.distanceID=distanceID;
 	}
 	
 	public String getCity1(){
@@ -45,10 +44,5 @@ public class CityDistancePO implements Serializable{
 		this.distance = distance;
 		return false;
 	}
-	public String getID(){
-		return distanceID;
-	}
-	public void setID(String id){
-		distanceID=id;
-	}
+
 }

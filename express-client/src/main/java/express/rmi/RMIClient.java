@@ -66,6 +66,7 @@ public class RMIClient {
 	private static DeliverCreateOrderDataService order;
 	private static GoodsStatusDataService search;
 	private static TransCenterArrivalDocumentDataService transcenterarrivaldoc;
+	private static TransCenterShipmentDocDataService shipmentdoc;
 	private static PredictTimeDataService predicttime;
 	private static ReceiveInfoDataService receiveinfo;
 	private static TransCenterTransferDocDataService transferdoc;
@@ -74,8 +75,6 @@ public class RMIClient {
 	private static BusinessSaleArrivalDocumentDataService businessArrivalDoc;
 	private static OutDocDataService outDoc;
 	private static InDocDataService inDoc;
-	private static TransCenterShipmentDocDataService transCenterShipmentDoc;
-
 	public synchronized static void init() throws ClientException {
 		if (inited) {
 			return;
@@ -97,7 +96,7 @@ public class RMIClient {
 	private static void initObjects() throws MalformedURLException,
 			RemoteException, NotBoundException {
 		String urlPrefix = "rmi://" + IP + ":1099/";
-
+		
 		bankAccount = (BankAccountDataService) Naming.lookup(urlPrefix
 				+ "BankAccount-data");
 		paymentDoc = (PaymentDocDataService) Naming.lookup(urlPrefix
@@ -138,14 +137,19 @@ public class RMIClient {
 				.lookup(urlPrefix + "TransferDoc-data");
 		businessArrivalDoc = (BusinessSaleArrivalDocumentDataService) Naming
 				.lookup(urlPrefix + "BusinessHallArrivalDoc-data");
-		outDoc = (OutDocDataService) Naming.lookup(urlPrefix + "OutDoc-data");
-		inDoc = (InDocDataService) Naming.lookup(urlPrefix + "InDoc-data");
-		transCenterShipmentDoc = (TransCenterShipmentDocDataService) Naming
-				.lookup(urlPrefix + "ShipmentDocTransCenter-data");
-		businessShipmentdoc = (BusinessSaleShipmentDocDataService) Naming
-				.lookup(urlPrefix + "ShipmentDocBusinessHall-data");
+		outDoc = (OutDocDataService)  Naming.lookup(urlPrefix + "OutDoc-data");
 		
+		inDoc=(InDocDataService) Naming.lookup(urlPrefix+"InDoc-data");
+		
+		goodstatus=(GoodsStatusDataService)Naming.lookup(urlPrefix+"Status-data");
+		
+		predicttime=(PredictTimeDataService)Naming.lookup(urlPrefix+"Predicttime-data");
+		
+		transcenterarrivaldoc=(TransCenterArrivalDocumentDataService)Naming.lookup(urlPrefix+"TransArrivalDoc-data");
+		
+		businessShipmentdoc=(BusinessSaleShipmentDocDataService)Naming.lookup(urlPrefix+"BusinessShipment-data");
 	}
+	
 
 	public static BankAccountDataService getBankAccountObject() {
 		return bankAccount;
@@ -235,6 +239,10 @@ public class RMIClient {
 		return transcenterarrivaldoc;
 	}
 
+	public static TransCenterShipmentDocDataService getShipmentDocObject() {
+		return shipmentdoc;
+	}
+
 	public static PredictTimeDataService getPredictTimeObject() {
 		return predicttime;
 	}
@@ -258,17 +266,13 @@ public class RMIClient {
 	public static BusinessSaleArrivalDocumentDataService getBusinessHallArrivalDocObject() {
 		return businessArrivalDoc;
 	}
-
-	public static OutDocDataService getOutDocObject() {
+	
+	public static OutDocDataService getOutDocObject(){
 		return outDoc;
 	}
 
-	public static InDocDataService getInDocObject() {
+	public static InDocDataService getInDocObject(){
 		return inDoc;
 	}
-
-	public static TransCenterShipmentDocDataService getTransCenterShipmentDocObject() {
-		return transCenterShipmentDoc;
-	}
-
+	
 }

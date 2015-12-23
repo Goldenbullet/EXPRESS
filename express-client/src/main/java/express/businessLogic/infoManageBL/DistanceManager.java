@@ -1,5 +1,6 @@
 package express.businessLogic.infoManageBL;
 
+import java.awt.List;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -29,14 +30,14 @@ public class DistanceManager {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return 0;   //not find	
+		return -1;   //not find	
 	}
 	
 	public boolean setTwoCityDistance(CityDistanceVO vo){  //改变现有的城市距离
 		DistanceDataService rmiObj=RMIClient.getDistanceStrategy();
-		CityDistancePO po=new CityDistancePO(vo.getCity1(), vo.getCity2(), vo.getDistance(), vo.getID());
+		CityDistancePO po=new CityDistancePO(vo.getCity1(), vo.getCity2(), vo.getDistance());
 		try{
-		rmiObj.changeDistanceStrategy(po, vo.getID());
+		rmiObj.changeDistanceStrategy(po);
 		return true;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -45,23 +46,70 @@ public class DistanceManager {
 		
 	}
 	
-	public boolean addDistanceStrategy(CityDistanceVO vo){
+	public boolean addDistanceStrategy(ArrayList<CityDistanceVO> volist){
 		DistanceDataService rmiObj=RMIClient.getDistanceStrategy();
-		CityDistancePO po=new CityDistancePO(vo.getCity1(), vo.getCity2(), vo.getDistance(), vo.getID());
+		
+		int len=volist.size();
+		/*WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!
+		 * 传入的Arraylist顺序必须要和原来读出来的城市顺序一致！！！！！！！！
+		 * ex. 原来顺序为 南京 北京 上海 广州  
+		 * 现添加西安
+		 * 务必将传入arraylist的顺序写为：  西安在前！！！！！！
+		 * 西安－－北京 888km
+		 * 西安－－上海 888km
+		 * 西安－－广州 888km
+		 * 西安－－南京 888km
+		 * 
+		 * 
+		 * 
+		 * 否则会死！！！！！！！！！
+		 */
+		
 		try{
-			rmiObj.addDistanceStrategy(po);
-			return true;
-			}catch(Exception e){
-				e.printStackTrace();
+			int  currsize=getAllCity().size();
+			int nowsize=volist.size();
+			if(currsize!=nowsize){
+				return false;
 			}
-			return false;	
+			
+			ArrayList<CityDistancePO> list=rmiObj.getAllDistanceStrategy();
+			int numbers=list.size();
+			int skip=(int) Math.sqrt(numbers);
+			
+			int i=skip;
+			
+			for(CityDistanceVO vo:volist){
+				CityDistancePO po=new CityDistancePO(vo.getCity2(), vo.getCity1(), vo.getDistance()); //reverse
+				rmiObj.addDistanceStrategy(po,i); //insert
+				i+=skip;
+			}
+			
+			for(CityDistanceVO vo:volist){
+				CityDistancePO po=new CityDistancePO(vo.getCity1(), vo.getCity2(), vo.getDistance()); 
+				rmiObj.addDistanceStrategy(po); 
+			}
+			
+			// itself
+			CityDistancePO po=new CityDistancePO(volist.get(0).getCity1(), volist.get(0).getCity1(), 30);
+			rmiObj.addDistanceStrategy(po); 
+		
+		return true;
+		
+		}catch(Exception e){
+			return  false;
+		}
 	}
+		
+	//每次添加一定要传入一个完整的包！！
+	//Arraylist<CityPO>
+	//
 	
 	
-	public boolean deleteDistanceStrategy(CityDistanceVO vo){
+	
+	public boolean deleteDistanceStrategy(String city){
 		DistanceDataService rmiObj=RMIClient.getDistanceStrategy();
 		try {
-			rmiObj.deleteDistanceStrategy(vo.getID());
+			rmiObj.deleteDistanceStrategy(city);
 			return true;
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -69,40 +117,51 @@ public class DistanceManager {
 		return false;
 	}
 	
-	private  ArrayList<CityDistancePO> getDistanceList(){
-		DistanceDataService rmiObj=RMIClient.getDistanceStrategy();
-		ArrayList<CityDistancePO> list;
-		try {
-			list=rmiObj.getAllDistanceStrategy();
-			return list;
-		} catch (Exception e) {
-			return null;
-		}
-	}
+	//删除会把所有的关于该城市的信息一并删除
+	
+	
+	
+
 	
 	
 	
 	public ArrayList<String> getAllCity(){
-		DistanceManager dm=new DistanceManager();
-		ArrayList<CityDistancePO> list=dm.getDistanceList();
-		ArrayList<String> citylist=new ArrayList<String>();
-		int len=list.size();
-		int skip=(int) Math.sqrt(len);
-		
-		for(int i=0;i<len;i+=skip){
-			citylist.add(list.get(i).getCity1());
+		DistanceDataService rmiObj=RMIClient.getDistanceStrategy();
+		ArrayList<CityDistancePO> list;
+		try {
+			list = rmiObj.getAllDistanceStrategy();
+			ArrayList<String> citylist=new ArrayList<String>();
+			int len=list.size();
+			int skip=(int) Math.sqrt(len);
+			
+			for(int i=0;i<len;i+=skip){
+				citylist.add(list.get(i).getCity1());
+			}
+			return citylist;
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			return null;
 		}
-		return citylist;
+		
+	}
+	
+	
+	public void endDistance(){
+		DistanceDataService rmiObj=RMIClient.getDistanceStrategy();
+		try {
+			rmiObj.writeAllDistanceStrategy();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	
 	
 	
 	public static void main(String[] args){
-		try{
-			
+		try{		
 			RMIClient.init();
-			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -111,6 +170,26 @@ public class DistanceManager {
 		for(String city:lis){
 			System.out.println(city);
 		}
+		
+		
+		System.out.println(dm.getTwoCityDistance("上海", "广州"));
+		
+		CityDistanceVO vo=new CityDistanceVO("上海", "广州", 8989);
+		
+		
+		dm.setTwoCityDistance(vo);
+		System.out.println(dm.getTwoCityDistance("广州", "上海"));
+		
+		
+		
+		
+//		dm.deleteDistanceStrategy("北京");
+//		
+//		lis=dm.getAllCity();
+//		for(String city:lis){
+//			System.out.println(city);
+//		}
+//		System.out.println(lis.size());
 		
 
 	}

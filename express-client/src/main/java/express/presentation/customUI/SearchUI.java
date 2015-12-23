@@ -115,7 +115,7 @@ public class SearchUI extends JPanel{
 	
 	
 	public void paintComponent(Graphics g){
-		Image image=new ImageIcon("picture/abc.png").getImage();
+		Image image=new ImageIcon("picture/bkbkbk.png").getImage();
 		g.drawImage(image,0,0,this);
 }
 	
