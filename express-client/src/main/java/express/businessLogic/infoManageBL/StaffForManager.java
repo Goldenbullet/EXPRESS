@@ -234,6 +234,7 @@ public class StaffForManager implements StaffManageBLService ,UserRegisterServic
 		
 		UserInfoVO vo=new UserInfoVO();
 		
+		vo.setName(po.getName());
 		vo.setCity(po.getCity());
 		vo.setDate(po.getDate());
 		vo.setGender(po.getGender());

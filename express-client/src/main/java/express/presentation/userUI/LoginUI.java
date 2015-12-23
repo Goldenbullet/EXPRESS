@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.Desktop.Action;
@@ -78,12 +79,7 @@ public class LoginUI extends JFrame {
 		yesbutton.setContentAreaFilled(false);
 		yesbutton.setLocation(25, 260);
 		yesbutton.addMouseListener(listener);
-		yesbutton.registerKeyboardAction(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+		yesbutton.setMnemonic(KeyEvent.VK_ENTER);
 		this.add(yesbutton);
 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -32,7 +32,6 @@ public class managerMemberChangeUI extends JDialog {
 	private DefaultTableModel tmodel;
 	private StaffManageBLService smb;
 	private UserInfoVO vo;
-	private boolean b;
 
 	public managerMemberChangeUI(DefaultTableModel tablemodel, String id) {
 		this.setTitle("修改用户信息");

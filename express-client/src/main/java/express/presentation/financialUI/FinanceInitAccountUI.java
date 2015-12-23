@@ -66,6 +66,7 @@ public class FinanceInitAccountUI extends JPanel {
 	private OrgInfoManageService orginfo;
 	private String changeunder = "<HTML><U>修改</U></HTML>";
 	private String confirmunder = "<HTML><U>确认</U></HTML>";
+	private String staffid, orgid, vehicleid, repoid, accountname;
 	private InnerAccountBLService iab;
 	private Color c;
 	private Listener listener;
@@ -805,8 +806,8 @@ public class FinanceInitAccountUI extends JPanel {
 				result += "ID填写错误";
 			}
 		} else {
-			if ((iab.isUserIDAvailable(idtemp)) || (!checkID(idtemp))) {
-				result += "ID填写错误";
+			if (!idtemp.equals(staffid)) {
+				result += "ID不可修改";
 			}
 		}
 		if (!iab.isCellPhoneAvailable(phonetemp)) {
@@ -825,8 +826,8 @@ public class FinanceInitAccountUI extends JPanel {
 				result += "机构代号错误";
 			}
 		} else {
-			if ((!iab.isOrgIDAvailable(orgid)) || (!checkID(orgid))) {
-				result += "机构代号错误";
+			if (!orgid.equals(this.orgid)) {
+				result += "机构代号不可修改";
 			}
 		}
 		if (iab.isOrgNameAvailable(orgname)) {
@@ -859,8 +860,8 @@ public class FinanceInitAccountUI extends JPanel {
 				result += "车辆代号错误";
 			}
 		} else {
-			if (!iab.isCarIDAvailable(vehicleid)) {
-				result += "车辆代号错误";
+			if (!vehicleid.equals(this.vehicleid)) {
+				result += "车辆代号不可修改";
 			}
 		}
 		if (iab.isCarLicenseAvailable(vehiclenum)) {
@@ -885,8 +886,8 @@ public class FinanceInitAccountUI extends JPanel {
 				result += "该账户名已存在";
 			}
 		} else {
-			if (!iab.checkDuplication(accountname)) {
-				result += "该账户名不存在";
+			if (!accountname.equals(this.accountname)) {
+				result += "账户名不可修改";
 			}
 		}
 		if (!iab.isMoneyValid(total + "")) {
@@ -1064,7 +1065,7 @@ public class FinanceInitAccountUI extends JPanel {
 				double income = Double.parseDouble(incometf.getText());
 				double expense = Double.parseDouble(expensetf.getText());
 				double total = income - expense;
-				String result = checkaccountinfo(accountname, total + "",true);
+				String result = checkaccountinfo(accountname, total + "", true);
 
 				if (result.isEmpty()) {
 					balancetf.setText(total + "");
@@ -1246,7 +1247,7 @@ public class FinanceInitAccountUI extends JPanel {
 			double income = (Double) tableModel[4].getValueAt(row, 2);
 			double expense = (Double) tableModel[4].getValueAt(row, 3);
 			double total = income - expense;
-			String result = checkaccountinfo(accountname, total + "",false);
+			String result = checkaccountinfo(accountname, total + "", false);
 
 			if (result.isEmpty()) {
 				tableModel[4].setValueAt(total, row, 4);
@@ -1313,6 +1314,17 @@ public class FinanceInitAccountUI extends JPanel {
 					if (tableModel[i].getValueAt(row, col).equals(changeunder)) {
 						tableModel[i].setrowedit();
 						tableModel[i].setValueAt(confirmunder, row, col);
+						if (i == 0) 
+							staffid = (String) tableModel[i].getValueAt(row, 1);
+						else if (i == 1)
+							orgid = (String) tableModel[i].getValueAt(row, 4);
+						else if(i==2)
+							vehicleid = (String) tableModel[i].getValueAt(row, 3);
+						else if(i==3)
+							repoid = (String) tableModel[i].getValueAt(row, 1);
+						else if(i==4)
+							accountname = (String) tableModel[i].getValueAt(row, 1);
+						
 					} else if (tableModel[i].getValueAt(row, col).equals(
 							confirmunder)) {
 						tableModel[i].setrowunedit();
