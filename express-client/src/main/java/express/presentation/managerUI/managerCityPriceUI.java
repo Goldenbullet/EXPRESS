@@ -30,6 +30,9 @@ import express.businesslogicService.managerBLService.StaffManageBLService;
 import express.po.CityDistancePO;
 import express.po.DeliveryType;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
+import express.presentation.mainUI.MyOtherRedLabel;
 import express.presentation.mainUI.MyTableModel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockEmpty;
@@ -41,7 +44,10 @@ import express.vo.UserInfoVO;
 public class managerCityPriceUI extends JPanel {
 
 	private JPanel tippane;
-	private JButton priceadd, disadd, dischange, disdetele;
+	private MyOtherGreenLabel priceadd;
+	private MyOtherBlueLabel disadd;
+	private MyOtherGreenLabel dischange;
+	private MyOtherRedLabel disdetele;
 	private Vector<Vector<JTextField>> distf;
 	private JTextField citytf;
 	private JTextField[] pricetf;
@@ -114,10 +120,9 @@ public class managerCityPriceUI extends JPanel {
 		}
 
 		border = pricetf[0].getBorder();
-		priceadd = new JButton("修改");
+		priceadd = new MyOtherGreenLabel("修改");
 		priceadd.setBounds(100, 520, 100, 30);
 		priceadd.addMouseListener(lis);
-		priceadd.setFont(buttonf);
 		pricepane.add(priceadd);
 
 		// allcity = new ArrayList<String>();
@@ -193,10 +198,9 @@ public class managerCityPriceUI extends JPanel {
 		citytf.setFont(f);
 		this.add(citytf);
 
-		disadd = new JButton("添加");
+		disadd = new MyOtherBlueLabel("添加");
 		disadd.setBounds(300 + 150, 630, 120, 30);
 		disadd.addMouseListener(lis);
-		disadd.setFont(buttonf);
 		this.add(disadd);
 
 		// disok = new JButton("确认");
@@ -205,16 +209,14 @@ public class managerCityPriceUI extends JPanel {
 		// disok.setFont(buttonf);
 		// this.add(disok);
 
-		dischange = new JButton("修改");
+		dischange = new MyOtherGreenLabel("修改");
 		dischange.setBounds(300 + 300, 630, 120, 30);
 		dischange.addMouseListener(lis);
-		dischange.setFont(buttonf);
 		this.add(dischange);
 
-		disdetele = new JButton("删除");
+		disdetele = new MyOtherRedLabel("删除");
 		disdetele.setBounds(300 + 450, 630, 80, 30);
 		disdetele.addMouseListener(lis);
-		disdetele.setFont(buttonf);
 		this.add(disdetele);
 		
 		tippane=new JPanel();
@@ -584,14 +586,30 @@ public class managerCityPriceUI extends JPanel {
 		}
 
 		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+		public void mousePressed(MouseEvent e) {
+			if(e.getSource()==priceadd){
+				priceadd.whenPressed();
+			}else if (e.getSource()==disadd) {
+				disadd.whenPressed();
+			}else if (e.getSource()==dischange) {
+				dischange.whenPressed();
+			}else if (e.getSource()==disdetele) {
+				disdetele.whenPressed();
+			}
 
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+		public void mouseReleased(MouseEvent e) {
+			if(e.getSource()==priceadd){
+				priceadd.setMyColor();
+			}else if (e.getSource()==disadd) {
+				disadd.setMyColor();
+			}else if (e.getSource()==dischange) {
+				dischange.setMyColor();
+			}else if (e.getSource()==disdetele) {
+				disdetele.setMyColor();
+			}
 
 		}
 

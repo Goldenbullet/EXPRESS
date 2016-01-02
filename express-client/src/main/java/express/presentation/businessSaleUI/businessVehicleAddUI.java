@@ -1,5 +1,6 @@
 package express.presentation.businessSaleUI;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -17,6 +18,8 @@ import javax.swing.table.DefaultTableModel;
 import express.businessLogic.infoManageBL.Vehicle;
 import express.businesslogicService.businessSaleBLService.VehicleBusinessSaleblService;
 import express.data.vehicleAndDriverData.VehicleIO;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherRedLabel;
 import express.vo.VehicleInfoVO;
 
 public class businessVehicleAddUI extends JDialog {
@@ -24,7 +27,8 @@ public class businessVehicleAddUI extends JDialog {
 	private DefaultTableModel model;
 	private JTextField nametf, numbertf, orgIDtf, useYeartf;
 	private JComboBox isUsingcb;
-	private JButton ok, exit;
+	private MyOtherBlueLabel ok;
+	private MyOtherRedLabel exit;
 
 	private String name, number, orgID, isUsing;
 	private int useYear;
@@ -39,7 +43,8 @@ public class businessVehicleAddUI extends JDialog {
 		this.setLayout(null);
 		this.setSize(350, 310);
 		this.setLocationRelativeTo(null);
-
+		this.getContentPane().setBackground(Color.white);
+		
 		int leftside1 = 10;
 		int leftside2 = 130;
 		Font font = new Font("幼圆", Font.PLAIN, 20);
@@ -99,16 +104,16 @@ public class businessVehicleAddUI extends JDialog {
 		isUsingcb.setFont(f);
 		this.add(isUsingcb);
 
-		ok = new JButton("确认");
+		ok = new MyOtherBlueLabel("确认");
 		ok.setBounds(30, 225, 100, 30);
 		ok.addMouseListener(listener);
-		ok.setFont(buttonfont);
+
 		this.add(ok);
 
-		exit = new JButton("取消");
+		exit = new MyOtherRedLabel("取消");
 		exit.setBounds(180, 225, 100, 30);
 		exit.addMouseListener(listener);
-		exit.setFont(buttonfont);
+		
 		this.add(exit);
 	}
 
@@ -174,13 +179,21 @@ public class businessVehicleAddUI extends JDialog {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==ok){
+				ok.whenPressed();
+			}else if (e.getSource()==exit) {
+				exit.whenPressed();
+			}
 
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==ok){
+				ok.setMyColor();
+			}else if (e.getSource()==exit) {
+				ok.setMyColor();
+			}
 
 		}
 

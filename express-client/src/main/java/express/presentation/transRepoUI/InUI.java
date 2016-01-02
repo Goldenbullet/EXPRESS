@@ -29,6 +29,9 @@ import express.po.Area;
 import express.po.RepoPosition;
 import express.presentation.mainUI.DateChooser;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
+import express.presentation.mainUI.MyOtherOrangeLabel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockEmpty;
 import express.presentation.mainUI.TipBlockError;
@@ -40,7 +43,9 @@ public class InUI extends JPanel {
 	// private JButton button_return;
 
 	private JPanel tippane;
-	private JButton button_confirm, button_cancel, button_exit;
+	private MyOtherBlueLabel button_confirm;
+	private MyOtherGreenLabel button_cancel;
+	private MyOtherOrangeLabel button_exit;
 	private MainUIService m;
 	private JTextField textArea1, textArea6, textArea7, datetf;
 	// private String number, date, arrival, district, row, shelf, position;
@@ -183,25 +188,22 @@ public class InUI extends JPanel {
 
 		JListener listener = new JListener();
 
-		button_confirm = new JButton("确定");
+		button_confirm = new MyOtherBlueLabel("确定");
 		button_confirm.setBounds(200, 600, 130, 40);
 		button_confirm.addMouseListener(listener);
-		button_confirm.setFont(f1);
-		button_confirm.setBackground(Color.WHITE);
+
 		this.add(button_confirm);
 
-		button_cancel = new JButton("取消");
+		button_cancel = new MyOtherGreenLabel("取消");
 		button_cancel.setBounds(370, 600, 130, 40);
 		button_cancel.addMouseListener(listener);
-		button_cancel.setFont(f1);
-		button_cancel.setBackground(Color.WHITE);
+		
 		this.add(button_cancel);
 
-		button_exit = new JButton("返回菜单");
+		button_exit = new MyOtherOrangeLabel("返回菜单");
 		button_exit.setBounds(550, 600, 130, 40);
 		button_exit.addMouseListener(listener);
-		button_exit.setFont(f1);
-		button_exit.setBackground(Color.WHITE);
+
 		this.add(button_exit);
 
 		// areaBox.addMouseListener(listener);
@@ -336,7 +338,6 @@ public class InUI extends JPanel {
 			InDocblService inDoc = new InDoc();
 			boolean succ = inDoc.addInDoc(vo);
 			inDoc.endInDoc();
-			adjust.recordRepo();
 			if (succ) {
 				TipBlock block = new TipBlock("生成成功");
 				tippane.add(block);
@@ -424,11 +425,23 @@ public class InUI extends JPanel {
 		}
 
 		public void mousePressed(MouseEvent arg0) {
-
+			if(arg0.getSource()==button_confirm){
+				button_confirm.whenPressed();
+			}else if (arg0.getSource()==button_cancel) {
+				button_cancel.whenPressed();
+			}else if (arg0.getSource()==button_exit) {
+				button_exit.whenPressed();
+			}
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
-
+			if(arg0.getSource()==button_confirm){
+				button_confirm.setMyColor();
+			}else if (arg0.getSource()==button_cancel) {
+				button_cancel.setMyColor();
+			}else if (arg0.getSource()==button_exit) {
+				button_exit.setMyColor();
+			}
 		}
 
 	}

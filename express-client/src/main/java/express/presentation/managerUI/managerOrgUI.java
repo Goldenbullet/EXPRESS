@@ -25,6 +25,9 @@ import express.businessLogic.infoManageBL.OrgForManager;
 import express.businesslogicService.managerBLService.OrgManageBLService;
 import express.po.OrgProperty;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
+import express.presentation.mainUI.MyOtherRedLabel;
 import express.presentation.mainUI.MyTableModel;
 import express.presentation.mainUI.TipBlockEmpty;
 import express.presentation.mainUI.TipBlockError;
@@ -37,7 +40,9 @@ public class managerOrgUI extends JPanel {
 	private JTable table;
 	private MyTableModel tableModel;
 	private TableColumnModel tcm;
-	private JButton detele, add, change;
+	private MyOtherRedLabel detele;
+	private MyOtherBlueLabel add;
+	private MyOtherGreenLabel change;
 	private JTextField idtf;
 	private JComboBox orgtypecb;
 	private String changeunder = "<HTML><U>修改</U></HTML>";
@@ -99,22 +104,22 @@ public class managerOrgUI extends JPanel {
 		scrollPanes.setBounds(50, 60, 750, 600);
 		this.add(scrollPanes);
 
-		detele = new JButton("删除");
+		detele = new MyOtherRedLabel("删除");
 		detele.setBounds(50, 10, 100, 40);
-		detele.setFont(buttonfont);
+		
 		detele.addMouseListener(listener);
 		this.add(detele);
 
-		add = new JButton("添加");
+		add = new MyOtherBlueLabel("添加");
 		add.setBounds(190, 10, 100, 40);
 		add.addMouseListener(listener);
-		add.setFont(buttonfont);
+		
 		this.add(add);
 
-		change = new JButton("查找");
+		change = new MyOtherGreenLabel("查找");
 		change.setBounds(320, 10, 100, 40);
 		change.addMouseListener(listener);
-		change.setFont(buttonfont);
+		
 		this.add(change);
 
 		JLabel idl = new JLabel("机构代号");
@@ -216,12 +221,24 @@ public class managerOrgUI extends JPanel {
 		}
 
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==change){
+				change.whenPressed();
+			}else if (e.getSource()==add) {
+				add.whenPressed();
+			}else if (e.getSource()==detele) {
+				detele.whenPressed();
+			}
 
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==change){
+				change.setMyColor();
+			}else if (e.getSource()==add) {
+				add.setMyColor();
+			}else if (e.getSource()==detele) {
+				detele.setMyColor();
+			}
 
 		}
 	}

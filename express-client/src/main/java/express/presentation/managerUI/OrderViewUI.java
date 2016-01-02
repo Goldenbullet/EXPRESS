@@ -16,6 +16,8 @@ import express.businessLogic.examDocumentBL.ExamDocument;
 import express.businesslogicService.managerBLService.ExamDocumentBLService;
 import express.po.DeliveryType;
 import express.po.PackageType;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
 import express.vo.OrderVO;
 
 public class OrderViewUI extends JDialog {
@@ -24,7 +26,8 @@ public class OrderViewUI extends JDialog {
 	private String id;
 	private DefaultTableModel tmodel;
 	private ExamDocumentBLService examdoc;
-	private JButton ok, exit;
+	private MyOtherBlueLabel ok;
+	private MyOtherGreenLabel exit;
 
 	public OrderViewUI(DefaultTableModel tablemodel, OrderVO vo) {
 		id = vo.getOrderID();
@@ -108,15 +111,15 @@ public class OrderViewUI extends JDialog {
 			pactype = "快递袋";
 		tf[7].setText(pactype);
 
-		ok = new JButton("通过");
+		ok = new MyOtherBlueLabel("通过");
 		ok.setBounds(leftside2, 310, 80, 30);
-		ok.setFont(font);
+
 		ok.addMouseListener(lis);
 		this.add(ok);
 
-		exit = new JButton("取消");
+		exit = new MyOtherGreenLabel("取消");
 		exit.setBounds(leftside2 + width + 30, 310, 80, 30);
-		exit.setFont(font);
+
 		exit.addMouseListener(lis);
 		this.add(exit);
 	}
@@ -155,13 +158,22 @@ public class OrderViewUI extends JDialog {
 
 		@Override
 		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==ok){
+				ok.whenPressed();
+			}else if (arg0.getSource()==exit) {
+				exit.whenPressed();
+			}
 
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==ok){
+				ok.setMyColor();
+			}else if (arg0.getSource()==exit) {
+				exit.setMyColor();
+			}
+			
 
 		}
 

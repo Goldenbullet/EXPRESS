@@ -18,10 +18,13 @@ import javax.swing.JTextField;
 import express.businessLogic.repoBL.RepoController;
 import express.businesslogicService.transcenterRepoBLService.AdjustRepoBLService;
 import express.po.Area;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
 
 public class ShowRepoUI extends JDialog {
 
-	JButton ok, exit;
+	MyOtherBlueLabel ok;
+	MyOtherGreenLabel exit;
 	JButton[] buttonList = new JButton[12];
 	JTextField rowtf, postf;
 	String text = "";
@@ -32,7 +35,7 @@ public class ShowRepoUI extends JDialog {
 		this.setTitle("仓库信息");
 		this.setLayout(null);
 		this.setUndecorated(true);
-
+		this.getContentPane().setBackground(Color.white);
 		this.setSize(400, 450);
 		//this.setPreferredSize(new Dimension(400,500));
 		this.setLocationRelativeTo(null);
@@ -74,18 +77,14 @@ public class ShowRepoUI extends JDialog {
 		
 		Listener listener = new Listener();
 		
-		ok = new JButton();
-		ok.setText("确定");
-		ok.setBackground(Color.WHITE);
+		ok = new MyOtherBlueLabel("确定");
 		ok.setBounds(20, 390, 150, 40);
-		ok.setFont(new Font("隶书",Font.PLAIN,20));
 		this.add(ok);
 		
-		exit = new JButton();
-		exit.setText("取消");
-		exit.setBackground(Color.WHITE);
+		exit = new MyOtherGreenLabel("取消");
+		
 		exit.setBounds(200, 390, 150, 40);
-		exit.setFont(new Font("隶书",Font.PLAIN,20));
+		
 		this.add(exit);
 		
 		ok.addMouseListener(listener);
@@ -127,19 +126,25 @@ public class ShowRepoUI extends JDialog {
 
 		@Override
 		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==ok){
+				ok.whenPressed();
+			}else if (arg0.getSource()==exit) {
+				exit.whenPressed();
+			}
 
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==ok){
+				ok.setMyColor();
+			}else if (arg0.getSource()==exit) {
+				exit.setMyColor();
+			}
 
 		}
 

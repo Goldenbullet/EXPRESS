@@ -26,6 +26,8 @@ import express.businessLogic.documentBL.ShipmentDocController;
 import express.businesslogicService.transcenterSaleBLService.TransCenterSaleShipmentDocblService;
 import express.presentation.mainUI.DateChooser;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockEmpty;
 import express.presentation.mainUI.TipBlockError;
@@ -36,7 +38,8 @@ public class transSaleShipmentDocUI extends JPanel {
 	
 	
 	private JPanel tippane;
-	private JButton button_confirm, button_cancel;
+	private MyOtherBlueLabel button_confirm;
+	private MyOtherGreenLabel button_cancel;
 	private DateChooser datechooser;
 	private JTextField[] tf;
 	private JTextArea textArea6;
@@ -183,16 +186,16 @@ public class transSaleShipmentDocUI extends JPanel {
 		label7.setFont(font);
 		this.add(label7);
 
-		button_confirm = new JButton("确定");
+		button_confirm = new MyOtherBlueLabel("确定");
 		button_confirm.setBounds(250, 605, 100, 30);
-		button_confirm.setFont(buttonfont);
+		
 		button_confirm.addMouseListener(listener);
 		this.add(button_confirm);
 
-		button_cancel = new JButton("取消");
+		button_cancel = new MyOtherGreenLabel("取消");
 		button_cancel.setBounds(400, 605, 100, 30);
 		button_cancel.addMouseListener(listener);
-		button_cancel.setFont(buttonfont);
+		
 		this.add(button_cancel);
 	
 		tippane=new JPanel();
@@ -314,12 +317,20 @@ public class transSaleShipmentDocUI extends JPanel {
 		}
 
 		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==button_confirm){
+				button_confirm.whenPressed();
+			}else if (arg0.getSource()==button_cancel) {
+				button_cancel.whenPressed();
+			}
 
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==button_confirm){
+				button_confirm.setMyColor();
+			}else if (arg0.getSource()==button_cancel) {
+				button_cancel.setMyColor();
+			}
 
 		}
 

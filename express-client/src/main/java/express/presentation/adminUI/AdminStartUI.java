@@ -33,6 +33,9 @@ import express.businesslogicService.adminBLService.RemoveUserBLService;
 import express.businesslogicService.signBLService.LogInBLService;
 import express.po.UserRole;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
+import express.presentation.mainUI.MyOtherRedLabel;
 import express.presentation.mainUI.MyTableModel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockError;
@@ -47,7 +50,9 @@ public class AdminStartUI extends JPanel {
 	private LogInBLService login;
 	private JLabel username, userid, idl;
 	private JTextField idtf;
-	private JButton detele, add, search;
+	private MyOtherRedLabel detele;
+	private MyOtherBlueLabel add;
+	private MyOtherGreenLabel search;
 	private JLabel exit;
 	private JTable table;
 	private MyTableModel tmodel;
@@ -158,22 +163,19 @@ public class AdminStartUI extends JPanel {
 		scrollPane.setBounds(50, 60, 900, 600);
 		this.add(scrollPane);
 
-		detele = new JButton("删除");
+		detele = new MyOtherRedLabel("删除");
 		detele.setBounds(280, 10, 100, 40);
-		detele.setFont(buttonf);
 		detele.addMouseListener(listener);
 		this.add(detele);
 
-		add = new JButton("添加");
+		add = new MyOtherBlueLabel("添加");
 		add.setBounds(410, 10, 100, 40);
 		add.addMouseListener(listener);
-		add.setFont(buttonf);
 		this.add(add);
 
-		search = new JButton("查找");
+		search = new MyOtherGreenLabel("查找");
 		search.setBounds(770, 10, 100, 40);
 		search.addMouseListener(listener);
-		search.setFont(buttonf);
 		this.add(search);
 
 		idl = new JLabel("工号");
@@ -188,10 +190,14 @@ public class AdminStartUI extends JPanel {
 		
 		tippane=new JPanel();
 		 tippane.setSize(1000,40);
-		tippane.setLocation(0, 660);
+		tippane.setLocation(75, 660);
 		tippane.setBackground(Color.white);
 		tippane.setLayout(null);
 		this.add(tippane);
+		
+		
+		
+		
 	}
 	
 	private String transposition(UserRole posit){
@@ -251,7 +257,9 @@ public class AdminStartUI extends JPanel {
 					acui.setVisible(true);
 				} else {
 					TipBlockError block=new TipBlockError("工号不存在");
+					
 					tippane.add(block);
+					
 					block.show();
 					block=null;
 				}
@@ -277,6 +285,12 @@ public class AdminStartUI extends JPanel {
 			// TODO Auto-generated method stub
 			if (e.getSource() == exit) {
 				exit.setForeground(Color.RED);
+			}else if (e.getSource()==add) {
+				add.whenPressed();
+			}else if (e.getSource()==search) {
+				search.whenPressed();
+			}else if (e.getSource()==detele) {
+				detele.whenPressed();
 			}
 		}
 
@@ -284,6 +298,12 @@ public class AdminStartUI extends JPanel {
 			// TODO Auto-generated method stub
 			if (e.getSource() == exit) {
 				exit.setForeground(Color.BLUE);
+			}else if (e.getSource()==add) {
+				add.setMyColor();
+			}else if (e.getSource()==search) {
+				search.setMyColor();
+			}else if (e.getSource()==detele) {
+				detele.setMyColor();
 			}
 		}
 

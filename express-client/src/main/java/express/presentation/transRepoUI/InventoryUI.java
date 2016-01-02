@@ -23,6 +23,8 @@ import express.businesslogicService.transcenterRepoBLService.InventoryRepoBLServ
 import express.po.Area;
 import express.po.RepoPosition;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
 import express.presentation.mainUI.MyScrollPane;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockError;
@@ -33,7 +35,8 @@ public class InventoryUI extends JPanel {
 	private MainUIService m;
 	private JPanel tippane;
 	private JPanel inventory;
-	private JButton excel, exit;
+	private MyOtherBlueLabel excel;
+	private MyOtherGreenLabel exit;
 	private String orgID = IDKeeper.getOrgID();
 
 	public InventoryUI(MainUIService main) {
@@ -78,18 +81,12 @@ public class InventoryUI extends JPanel {
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		this.add(scrollPane);
 
-		excel = new JButton();
-		excel.setFont(f1);
-		excel.setText("导出Excel");
+		excel = new MyOtherBlueLabel("导出Excel");	
 		excel.setBounds(100, 600, 250, 40);
-		excel.setBackground(Color.WHITE);
 		this.add(excel);
 
-		exit = new JButton();
-		exit.setFont(f1);
-		exit.setText("返回菜单");
+		exit = new MyOtherGreenLabel("返回菜单");
 		exit.setBounds(500, 600, 250, 40);
-		exit.setBackground(Color.WHITE);
 		this.add(exit);
 
 		Listener listener = new Listener();
@@ -315,13 +312,21 @@ public class InventoryUI extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==excel){
+				excel.whenPressed();
+			}else if (e.getSource()==exit) {
+				exit.whenPressed();
+			}
 
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==excel){
+				excel.setMyColor();
+			}else if (e.getSource()==exit) {
+				exit.setMyColor();
+			}
 
 		}
 

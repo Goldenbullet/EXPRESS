@@ -18,6 +18,9 @@ import express.businessLogic.infoManageBL.StaffForManager;
 import express.businesslogicService.managerBLService.StaffManageBLService;
 import express.po.UserRole;
 import express.presentation.mainUI.DateChooser;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
+import express.presentation.mainUI.MyOtherRedLabel;
 import express.presentation.mainUI.TipBlock;
 import express.vo.UserInfoVO;
 
@@ -33,7 +36,9 @@ public class managerMemberChangeUI extends JDialog {
 	private UserRole posit;
 	private boolean sex;
 	private DateChooser datechooser;
-	private JButton ok, exit, detele;
+	private MyOtherBlueLabel ok;
+	private MyOtherGreenLabel exit;
+	private MyOtherRedLabel detele;
 	private DefaultTableModel tmodel;
 	private StaffManageBLService smb;
 	private UserInfoVO vo;
@@ -44,7 +49,9 @@ public class managerMemberChangeUI extends JDialog {
 		this.setLayout(null);
 		this.setSize(400, 400);
 		this.setLocationRelativeTo(null);
-
+		this.getContentPane().setBackground(Color.white);
+		
+		
 		this.id = id;
 		tmodel = tablemodel;
 		int leftside1 = 10;
@@ -151,21 +158,19 @@ public class managerMemberChangeUI extends JDialog {
 		datechooser.setBounds(leftside2 + 110, 240, 40, 40);
 		this.add(datechooser);
 
-		ok = new JButton("修改");
+		ok = new MyOtherBlueLabel("修改");
 		ok.setBounds(30, 305, 70, 30);
-		ok.setFont(buttonfont);
 		ok.addMouseListener(lis);
 		this.add(ok);
 		
-		detele = new JButton("删除");
+		detele = new MyOtherRedLabel("删除");
 		detele.setBounds(120, 305,70, 30);
-		detele.setFont(buttonfont);
 		detele.addMouseListener(lis);
 		this.add(detele);
 
-		exit = new JButton("取消");
+		
+		exit = new MyOtherGreenLabel("取消");
 		exit.setBounds(210, 305, 70, 30);
-		exit.setFont(buttonfont);
 		exit.addMouseListener(lis);
 		this.add(exit);
 		
@@ -259,13 +264,25 @@ public class managerMemberChangeUI extends JDialog {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==ok){
+				ok.whenPressed();
+			}else if (e.getSource()==exit) {
+				exit.whenPressed();
+			}else if (e.getSource()==detele) {
+				detele.whenPressed();
+			}
 
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==ok){
+				ok.setMyColor();
+			}else if (e.getSource()==exit) {
+				exit.setMyColor();
+			}else if (e.getSource()==detele) {
+				detele.setMyColor();
+			}
 
 		}
 

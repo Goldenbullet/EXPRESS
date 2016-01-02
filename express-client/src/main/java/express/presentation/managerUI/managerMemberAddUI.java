@@ -24,6 +24,8 @@ import express.businessLogic.infoManageBL.StaffForManager;
 import express.businesslogicService.managerBLService.StaffManageBLService;
 import express.po.UserRole;
 import express.presentation.mainUI.DateChooser;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockEmpty;
 import express.presentation.mainUI.TipBlockError;
@@ -32,7 +34,8 @@ import express.vo.UserInfoVO;
 public class managerMemberAddUI extends JDialog {
 	
 	private JPanel tippane;
-	private JButton ok, exit;
+	private MyOtherBlueLabel ok;
+	private MyOtherGreenLabel exit;
 	private JTextField nametf, idtf, phonetf, datetf;
 	private JLabel tip1, tip2, tip3;
 	private String tipstr1 = "* 未填写";
@@ -53,7 +56,9 @@ public class managerMemberAddUI extends JDialog {
 		this.setLayout(null);
 		this.setSize(350, 400);
 		this.setLocationRelativeTo(null);
-
+		this.getContentPane().setBackground(Color.white);
+		
+		
 		int leftside1 = 10;
 		int leftside2 = 100;
 		Font font = new Font("幼圆", Font.PLAIN, 20);
@@ -162,16 +167,14 @@ public class managerMemberAddUI extends JDialog {
 		datechooser.setBounds(leftside2 + 110, 240, 40, 40);
 		this.add(datechooser);
 
-		ok = new JButton("确认");
+		ok = new MyOtherBlueLabel("确认");
 		ok.setBounds(30, 305, 100, 30);
 		ok.addMouseListener(lis);
-		ok.setFont(buttonfont);
 		this.add(ok);
 
-		exit = new JButton("取消");
+		exit = new MyOtherGreenLabel("取消");
 		exit.setBounds(180, 305, 100, 30);
 		exit.addMouseListener(lis);
-		exit.setFont(buttonfont);
 		this.add(exit);
 		
 		
@@ -332,14 +335,21 @@ public class managerMemberAddUI extends JDialog {
 
 		@Override
 		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==ok){
+				ok.whenPressed();
+			}else if (arg0.getSource()==exit) {
+				exit.whenPressed();
+			}
 
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
+			if(arg0.getSource()==ok){
+				ok.setMyColor();
+			}else if (arg0.getSource()==exit) {
+				exit.setMyColor();
+			}
 		}
 
 	}

@@ -21,6 +21,9 @@ import javax.swing.table.TableColumnModel;
 import express.businessLogic.infoManageBL.Driver;
 import express.businesslogicService.businessSaleBLService.DriverBusinessSaleblService;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
+import express.presentation.mainUI.MyOtherRedLabel;
 import express.presentation.mainUI.MyTableModel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockError;
@@ -39,7 +42,9 @@ public class businessDriverUI extends JPanel {
 	private TableColumnModel tcm;
 	private JTable table;
 
-	private JButton delete, change, add;
+	private MyOtherRedLabel delete;
+	private MyOtherGreenLabel change;
+	private MyOtherBlueLabel add;
 	private JTextField idtf;
 	private JComboBox gendercb;
 
@@ -118,22 +123,19 @@ public class businessDriverUI extends JPanel {
 		scrollPane.setBounds(25, 60, 800, 600);
 		this.add(scrollPane);
 
-		delete = new JButton("删除");
+		delete = new MyOtherRedLabel("删除");
 		delete.setBounds(50, 10, 100, 40);
-		delete.setFont(buttonfont);
 		delete.addMouseListener(listener);
 		this.add(delete);
 
-		add = new JButton("添加");
+		add = new MyOtherBlueLabel("添加");
 		add.setBounds(190, 10, 100, 40);
 		add.addMouseListener(listener);
-		add.setFont(buttonfont);
 		this.add(add);
 
-		change = new JButton("查找");
+		change = new MyOtherGreenLabel("查找");
 		change.setBounds(320, 10, 100, 40);
 		change.addMouseListener(listener);
-		change.setFont(buttonfont);
 		this.add(change);
 
 		JLabel id = new JLabel("司机编号");
@@ -251,13 +253,25 @@ public class businessDriverUI extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if (e.getSource()==add) {
+				add.whenPressed();
+			}else if (e.getSource()==delete) {
+				delete.whenPressed();
+			}else if (e.getSource()==change) {
+				change.whenPressed();
+			}
 
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if (e.getSource()==add) {
+				add.setMyColor();
+			}else if (e.getSource()==delete) {
+				delete.setMyColor();
+			}else if (e.getSource()==change) {
+				change.setMyColor();
+			}
 
 		}
 

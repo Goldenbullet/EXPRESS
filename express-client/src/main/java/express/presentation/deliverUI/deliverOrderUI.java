@@ -30,6 +30,9 @@ import express.businesslogicService.delivermanBLService.DeliverCreateOrderBLServ
 import express.po.DeliveryType;
 import express.po.PackageType;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
+import express.presentation.mainUI.MyOtherRedLabel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockError;
 import express.vo.OrderVO;
@@ -39,7 +42,8 @@ public class deliverOrderUI extends JPanel {
 	private JTextField[] tf;
 	private JPanel[] p;
 	private JComboBox deliverytype, packtype;
-	private JButton button_cancel, button_confirm;
+	private MyOtherGreenLabel button_cancel;
+	private MyOtherBlueLabel button_confirm;
 	private String sendername, senderaddress, senderworkplace, sendertelpnum,
 			sendermobilepnm;
 	private String recipientname, recipientaddress, recipientworkplace,
@@ -215,15 +219,15 @@ public class deliverOrderUI extends JPanel {
 
 		Listener lis = new Listener();
 
-		button_confirm = new JButton("确定");
+		button_confirm = new MyOtherBlueLabel("确定");
 		button_confirm.setBounds(250, 630, 100, 30);
-		button_confirm.setFont(buttonfont);
+
 		button_confirm.addMouseListener(lis);
 		this.add(button_confirm);
 
-		button_cancel = new JButton("取消");
+		button_cancel = new MyOtherGreenLabel("取消");
 		button_cancel.setBounds(400, 630, 100, 30);
-		button_cancel.setFont(buttonfont);
+	
 		button_cancel.addMouseListener(lis);
 		this.add(button_cancel);
 		tippane=new JPanel();
@@ -352,13 +356,20 @@ public class deliverOrderUI extends JPanel {
 		}
 
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==button_confirm){
+				button_confirm.whenPressed();
+			}else if (e.getSource()==button_cancel) {
+				button_cancel.whenPressed();
+			}
 
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
+			if(e.getSource()==button_confirm){
+				button_confirm.setMyColor();
+			}else if (e.getSource()==button_cancel) {
+				button_cancel.setMyColor();
+			}
 		}
 	}
 

@@ -58,7 +58,7 @@ public class Order {
 			rmiObj.createOrder(po);
 			
 			GoodTransStatusPO statuspo=new GoodTransStatusPO();
-			statuspo.addStatus("快递已收件");
+			statuspo.addStatus("快递已被揽件");
 			statuspo.setOrderID(ID);
 			
 			
@@ -289,5 +289,54 @@ public class Order {
 		}
 		
 	}
+	
+	
+	// Test
+	
+	public static void main(String[] args){
+		try {
+			RMIClient.init();
+		} catch (ClientException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+//		12-22   2 6  4 12-24
+		OrderVO vo=new OrderVO();
+		vo.setSenderInfo("海龙", "南京市栖霞区仙林大道", "南京大学", "13139089552", "025-1212", "NanJing");
+		vo.setReceiverInfo("John Locke", "北京市颐和园路", "PKU", "15651705115", "025-909090", "BeiJing");
+		vo.setGoodsInfo(1, 1, 10, "Model", DeliveryType.Fast, PackageType.WoodBox);
+		vo.setGoodsInfo(1, 2.4, 0.2, "Notebook", DeliveryType.Slow, PackageType.WoodBox);
+		Order order=new Order();
+		System.out.println(order.getPredictArrivalTime("南京", "北京").getTime());
+		
+		
+		//order.end();
+		
+		
+//		Search search=new Search();
+//		GoodTransStatusVO vo=search.getOrderIDStatus("0000000000");
+//		
+//		int size=vo.getTime().size();
+//		System.out.println(size);
+//		for(int i=0;i<size;i++){
+//			System.out.println(vo.getTime().get(i));
+//		}
+//		System.out.println(vo.getstatusList().get(0));
+//		
+		
+		//System.out.println(order.getPredictArrivalTime(vo.getEndCity(), vo.getStartCity()));
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 }

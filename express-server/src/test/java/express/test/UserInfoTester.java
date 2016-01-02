@@ -25,7 +25,7 @@ public class UserInfoTester {
 			UserInfoPO us5 = new UserInfoPO("Jack",true,"1001004","18896963826",UserRole.Financial_highest,"010000","2015-10-6",true);
 			UserInfoPO us6 = new UserInfoPO("Sandy",false,"1001005","18896963836",UserRole.Manager,"010000","2015-10-6",true);
 			UserInfoPO us7 = new UserInfoPO("Adam",true,"1001006","18896963806",UserRole.TransCenterRepo,"0250","2015-10-6",true);
-			UserInfoPO us8 = new UserInfoPO("卢海龙",true,"admin","18896963938",UserRole.TransCenterSale,"0250","2015-10-6",true);
+			UserInfoPO us8 = new UserInfoPO("卢海龙",true,"1001007","18896963938",UserRole.TransCenterSale,"0250","2015-10-6",true);
 			
 			user.createuser(us1);
 			user.createuser(us2);

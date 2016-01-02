@@ -30,6 +30,9 @@ import express.dataService.vehicleAndDriverDataService.VehicleDataService;
 import express.po.UserRole;
 import express.po.VehicleInfoPO;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
+import express.presentation.mainUI.MyOtherRedLabel;
 import express.presentation.mainUI.MyTableModel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockError;
@@ -45,7 +48,9 @@ public class businessVehicleUI extends JPanel {
 	private VehicleInfoVO vo;
 	private ArrayList<VehicleInfoVO> list;
 
-	private JButton delete, change, add;
+	private MyOtherRedLabel delete;
+	private MyOtherGreenLabel change;
+	private MyOtherBlueLabel add;
 	private JTextField idtf;
 	private MyTableModel tableModel;
 	private TableColumnModel tcm;
@@ -120,22 +125,22 @@ public class businessVehicleUI extends JPanel {
 		scrollPane.setBounds(50, 60, 750, 600);
 		this.add(scrollPane);
 
-		delete = new JButton("删除");
+		delete = new MyOtherRedLabel("删除");
 		delete.setBounds(50, 10, 100, 40);
-		delete.setFont(buttonfont);
+
 		delete.addMouseListener(lisenter);
 		this.add(delete);
 
-		add = new JButton("添加");
+		add = new MyOtherBlueLabel("添加");
 		add.setBounds(190, 10, 100, 40);
 		add.addMouseListener(lisenter);
-		add.setFont(buttonfont);
+
 		this.add(add);
 
-		change = new JButton("查找");
+		change = new MyOtherGreenLabel("查找");
 		change.setBounds(320, 10, 100, 40);
 		change.addMouseListener(lisenter);
-		change.setFont(buttonfont);
+
 		this.add(change);
 
 		JLabel id = new JLabel("车辆代号");
@@ -253,13 +258,25 @@ public class businessVehicleUI extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==add){
+				add.whenPressed();
+			}else if (e.getSource()==delete) {
+				delete.whenPressed();
+			}else if (e.getSource()==change) {
+				change.whenPressed();
+			}
 
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==add){
+				add.setMyColor();
+			}else if (e.getSource()==delete) {
+				delete.setMyColor();
+			}else if (e.getSource()==change) {
+				change.setMyColor();
+			}
 
 		}
 

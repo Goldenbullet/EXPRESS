@@ -36,7 +36,7 @@ public class TransferDoc implements TransCenterTransferDocblService{
 			}	
 		}  //check every orderid
 		
-		if(!isTransIDavailable(vo.gettranscenterNumber())){
+		if(isTransIDavailable(vo.gettranscenterNumber())){
 			return false;
 		}
 		
@@ -137,7 +137,6 @@ public class TransferDoc implements TransCenterTransferDocblService{
 			
 			return totalfee;	
 		}catch(Exception e){
-			//e.printStackTrace();
 			return -1;
 		}
 	}
@@ -158,10 +157,22 @@ public class TransferDoc implements TransCenterTransferDocblService{
 		String orgID=IDKeeper.getOrgID();
 		Calendar c = Calendar.getInstance();
 		int year=c.get(Calendar.YEAR);
-		int month=c.get(Calendar.MONTH+1)+1;
+		int month=c.get(Calendar.MONTH)+1;
 		int day=c.get(Calendar.DATE);
 		
-		ID+=orgID+year+month+day;
+		if(month<10&&day<10){
+			ID+=orgID+year+"0"+month+"0"+day;
+		}
+		if(month>=10&&day<10){
+			ID+=orgID+year+month+"0"+day;	
+		}
+		if(month<10&&day>=10){
+			ID+=orgID+year+"0"+month+day;
+		}
+		if(month>=10&&day>=10){
+			ID+=orgID+year+month+day;
+		}
+		
 		long a=System.currentTimeMillis();
 		String x="";
 		x+=a;
@@ -176,9 +187,6 @@ public class TransferDoc implements TransCenterTransferDocblService{
 		try{
 			ArrayList<TransferDocPO> list=rmiObj.getTransferDoclist();
 			ArrayList<TransferDocVO> unexam=new ArrayList<TransferDocVO>();
-			
-			System.out.println("LIstSize::"+list.size());
-			
 			
 			
 			for(TransferDocPO po:list){

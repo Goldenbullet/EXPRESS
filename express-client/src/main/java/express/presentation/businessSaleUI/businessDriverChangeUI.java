@@ -16,6 +16,9 @@ import javax.swing.table.DefaultTableModel;
 import express.businessLogic.infoManageBL.Driver;
 import express.businesslogicService.businessSaleBLService.DriverBusinessSaleblService;
 import express.presentation.mainUI.DateChooser;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
+import express.presentation.mainUI.MyOtherRedLabel;
 import express.vo.DriverInfoVO;
 import express.vo.VehicleInfoVO;
 
@@ -27,7 +30,9 @@ public class businessDriverChangeUI extends JDialog {
 	private JTextField driverIDtf, orgIDtf, nametf, datetf, peopleIDtf,
 			cellphonetf, ddltf;
 	private JComboBox gendercb;
-	private JButton ok, delete, exit;
+	private MyOtherBlueLabel ok;
+	private MyOtherRedLabel delete;
+	private MyOtherGreenLabel exit;
 
 	private String driverID, orgID, name, date, peopleID, cellphone, gender,
 			ddl;
@@ -41,7 +46,7 @@ public class businessDriverChangeUI extends JDialog {
 		this.setLayout(null);
 		this.setSize(360, 410);
 		this.setLocationRelativeTo(null);
-		this.setBackground(Color.WHITE);
+		this.getContentPane().setBackground(Color.white);
 
 		int leftside1 = 10;
 		int leftside2 = 130;
@@ -145,22 +150,19 @@ public class businessDriverChangeUI extends JDialog {
 		ddltf.setFont(f);
 		this.add(ddltf);
 
-		ok = new JButton("确认");
+		ok = new MyOtherBlueLabel("确认");
 		ok.setBounds(30, 325, 80, 30);
 		ok.addMouseListener(listener);
-		ok.setFont(buttonfont);
 		this.add(ok);
 
-		delete = new JButton("删除");
+		delete = new MyOtherRedLabel("删除");
 		delete.setBounds(120, 325, 80, 30);
 		delete.addMouseListener(listener);
-		delete.setFont(buttonfont);
 		this.add(delete);
 
-		exit = new JButton("取消");
-		exit.setBounds(200, 325, 80, 30);
+		exit = new MyOtherGreenLabel("取消");
+		exit.setBounds(210, 325, 80, 30);
 		exit.addMouseListener(listener);
-		exit.setFont(buttonfont);
 		this.add(exit);
 
 	}
@@ -241,13 +243,25 @@ public class businessDriverChangeUI extends JDialog {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==ok){
+				ok.whenPressed();
+			}else if (e.getSource()==delete) {
+				delete.whenPressed();
+			}else if (e.getSource()==exit) {
+				exit.whenPressed();
+			}
 
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+		public void mouseReleased(MouseEvent e) {
+			if(e.getSource()==ok){
+				ok.setMyColor();
+			}else if (e.getSource()==delete) {
+				delete.setMyColor();
+			}else if (e.getSource()==exit) {
+				exit.setMyColor();
+			}
 
 		}
 

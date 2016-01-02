@@ -26,6 +26,8 @@ import express.businesslogicService.businessSaleBLService.BusinessSaleArrivalDoc
 import express.po.GoodsArrivalStatus;
 import express.presentation.mainUI.DateChooser;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherRedLabel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockEmpty;
 import express.presentation.mainUI.TipBlockError;
@@ -36,8 +38,8 @@ public class businessArrivalUI extends JPanel {
 	private JPanel tippane;
 	private JTextField ordertf, startplacetf, datetf, transDocNumtf;
 	private JLabel tip0,tip1, tip2;
-	private JButton button_confirm;
-	private JButton button_cancel;
+	private MyOtherBlueLabel button_confirm;
+	private MyOtherRedLabel button_cancel;
 	private ButtonGroup bg1;
 	private JRadioButton radioButton, radioButton_1, radioButton_2;
 	private DateChooser datechooser;
@@ -158,15 +160,13 @@ public class businessArrivalUI extends JPanel {
 		tip2.setFont(font);
 		tip2.setForeground(Color.RED);
 
-		button_confirm = new JButton("确定");
+		button_confirm = new MyOtherBlueLabel("确定");
 		button_confirm.setBounds(200, 520, 100, 30);
-		button_confirm.setFont(buttonfont);
 		button_confirm.addMouseListener(listener);
 		this.add(button_confirm);
 
-		button_cancel = new JButton("取消");
+		button_cancel = new MyOtherRedLabel("取消");
 		button_cancel.setBounds(350, 520, 100, 30);
-		button_cancel.setFont(buttonfont);
 		button_cancel.addMouseListener(listener);
 		this.add(button_cancel);
 		
@@ -288,13 +288,21 @@ public class businessArrivalUI extends JPanel {
 
 		}
 
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+		public void mousePressed(MouseEvent e) {
+			if(e.getSource()==button_confirm){
+				button_confirm.whenPressed();
+			}else if (e.getSource()==button_cancel) {
+				button_cancel.whenPressed();
+			}
 
 		}
 
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+		public void mouseReleased(MouseEvent e) {
+			if(e.getSource()==button_confirm){
+				button_confirm.setMyColor();
+			}else if (e.getSource()==button_cancel) {
+				button_cancel.setMyColor();
+			}
 
 		}
 

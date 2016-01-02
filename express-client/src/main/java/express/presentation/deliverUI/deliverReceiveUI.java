@@ -21,6 +21,8 @@ import express.businessLogic.receiveInfoBL.ReceiveInfo;
 import express.businesslogicService.delivermanBLService.ReceiveInfoBLService;
 import express.presentation.mainUI.DateChooser;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockError;
 import express.vo.ReceiveInfoVO;
@@ -28,7 +30,8 @@ import express.vo.ReceiveInfoVO;
 public class deliverReceiveUI extends JPanel {
 	
 	private JPanel tippane;
-	private JButton button_return, button_cancel;
+	private MyOtherBlueLabel button_return;
+	private MyOtherGreenLabel button_cancel;
 	private JTextField textArea1, textArea2, textArea3;
 	private DateChooser datechooser;
 	private String receiverName, receiveTime, OrderID;
@@ -93,15 +96,15 @@ public class deliverReceiveUI extends JPanel {
 
 		Listener lis = new Listener();
 
-		button_return = new JButton("确认");
+		button_return = new MyOtherBlueLabel("确认");
 		button_return.setBounds(220, 520, 100, 30);
-		button_return.setFont(buttonfont);
+	
 		button_return.addMouseListener(lis);
 		this.add(button_return);
 
-		button_cancel = new JButton("取消");
+		button_cancel = new MyOtherGreenLabel("取消");
 		button_cancel.setBounds(400, 520, 100, 30);
-		button_cancel.setFont(buttonfont);
+	
 		button_cancel.addMouseListener(lis);
 		this.add(button_cancel);
 		
@@ -196,12 +199,20 @@ public class deliverReceiveUI extends JPanel {
 		}
 
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==button_return){
+				button_return.whenPressed();
+			}else if (e.getSource()==button_cancel) {
+				button_cancel.whenPressed();
+			}
 
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==button_return){
+				button_return.setMyColor();
+			}else if (e.getSource()==button_cancel) {
+				button_cancel.setMyColor();
+			}
 
 		}
 	}

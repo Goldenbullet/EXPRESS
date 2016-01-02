@@ -26,6 +26,8 @@ import express.businessLogic.infoManageBL.SalaryManager;
 import express.businesslogicService.managerBLService.SalaryManagerBLService;
 import express.po.Strategy;
 import express.po.UserRole;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockEmpty;
 import express.vo.SalaryStrategyVO;
@@ -40,7 +42,8 @@ public class managerSalaryUI extends JPanel {
 	private JPanel panel;
 	private JPanel[] p;
 	private JTextField[] tf;
-	private JButton ok, exit;
+	private MyOtherBlueLabel ok;
+	private MyOtherGreenLabel exit;
 	private Border border;
 	private boolean complete = true;
 	private SalaryManagerBLService smb;
@@ -145,16 +148,16 @@ public class managerSalaryUI extends JPanel {
 
 		}
 
-		ok = new JButton("确认");
+		ok = new MyOtherBlueLabel("确认");
 		ok.setBounds(230, 620, 100, 30);
 		ok.addMouseListener(lis);
-		ok.setFont(buttonfont);
+		
 		this.add(ok);
 
-		exit = new JButton("取消");
+		exit = new MyOtherGreenLabel("取消");
 		exit.setBounds(400, 620, 100, 30);
 		exit.addMouseListener(lis);
-		exit.setFont(buttonfont);
+		
 		this.add(exit);
 	
 		tippane=new JPanel();
@@ -255,13 +258,21 @@ public class managerSalaryUI extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==ok){
+				ok.whenPressed();
+			}else if (arg0.getSource()==exit) {
+				exit.whenPressed();
+			}
 
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==ok){
+				ok.setMyColor();
+			}else if (arg0.getSource()==exit) {
+				exit.setMyColor();
+			}
 
 		}
 

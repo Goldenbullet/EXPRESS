@@ -34,6 +34,9 @@ import express.businesslogicService.transcenterSaleBLService.TransCenterTransfer
 import express.po.Area;
 import express.presentation.mainUI.DateChooser;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
+import express.presentation.mainUI.MyOtherOrangeLabel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockEmpty;
 import express.presentation.mainUI.TipBlockError;
@@ -45,7 +48,9 @@ public class OutUI extends JPanel {
 	// private JButton button_out;
 	// private JButton button_return;
 	private JPanel tippane;
-	private JButton cancel, confirm, exit;
+	private MyOtherBlueLabel confirm;
+	private MyOtherGreenLabel cancel;
+	private MyOtherOrangeLabel exit;
 	private JTextField textArea5, textArea4, datetf,dest;
 	private MainUIService m;
 	private DateChooser datechooser;
@@ -171,22 +176,18 @@ public class OutUI extends JPanel {
 		car.setForeground(Color.LIGHT_GRAY);
 		this.add(car);
 
-		confirm = new JButton("确定");
+		confirm = new MyOtherBlueLabel("确定");
 		confirm.setBounds(100, 600, 160, 40);
-		confirm.setBackground(Color.WHITE);
-		confirm.setFont(f1);
+
+	
 		this.add(confirm);
 
-		cancel = new JButton("取消");
+		cancel = new MyOtherGreenLabel("取消");
 		cancel.setBounds(345, 600, 160, 40);
-		cancel.setBackground(Color.WHITE);
-		cancel.setFont(f1);
 		this.add(cancel);
 
-		exit = new JButton("返回菜单");
+		exit = new MyOtherOrangeLabel("返回菜单");
 		exit.setBounds(590, 600, 160, 40);
-		exit.setBackground(Color.WHITE);
-		exit.setFont(f1);
 		this.add(exit);
 
 		JListener listener = new JListener();
@@ -235,10 +236,9 @@ public class OutUI extends JPanel {
 				fill = false;
 				textArea5.setBorder(BorderFactory.createLineBorder(new Color(
 						255, 215, 0), 2));
-				TipBlockEmpty block = new TipBlockEmpty("请填写"+type);
-				tippane.add(block);
-				block.show();
-				block = null;
+				JOptionPane.showConfirmDialog(null, "请填写" + type + "\n"
+						+ "或选择中转单编号生成单据", null, JOptionPane.DEFAULT_OPTION,
+						JOptionPane.WARNING_MESSAGE, null);
 			}
 		}
 		return fill;
@@ -250,10 +250,9 @@ public class OutUI extends JPanel {
 		if (t.compareTo(date) >= 0)
 			return true;
 		else {
-			TipBlockError block = new TipBlockError("出库时间不应晚于当前时间");
-			tippane.add(block);
-			block.show();
-			block = null;
+			JOptionPane.showConfirmDialog(null, "出库时间应该早于或等于当前时间", null,
+					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+					null);
 			return false;
 		}
 	}
@@ -380,12 +379,25 @@ public class OutUI extends JPanel {
 		}
 
 		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==confirm){
+				confirm.whenPressed();
+			}else if (arg0.getSource()==cancel) {
+				cancel.whenPressed();
+			}else if (arg0.getSource()==exit) {
+				exit.whenPressed();
+			}
+			
 
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==confirm){
+				confirm.setMyColor();
+			}else if (arg0.getSource()==cancel) {
+				cancel.setMyColor();
+			}else if (arg0.getSource()==exit) {
+				exit.setMyColor();
+			}
 
 		}
 

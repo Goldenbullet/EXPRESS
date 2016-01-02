@@ -25,6 +25,8 @@ import express.businessLogic.IDKeeper;
 import express.businessLogic.documentBL.ReceiveDoc;
 import express.businesslogicService.businessSaleBLService.BusinessSaleReceiveDocumentblService;
 import express.presentation.mainUI.DateChooser;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherRedLabel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockEmpty;
 import express.presentation.mainUI.TipBlockError;
@@ -41,8 +43,10 @@ public class businessReceiveUI extends JPanel {
 	private JTextField textArea3;
 	private JTextArea textArea4;
 	private DateChooser datechooser;
-	private JButton button_confirm;
-	private JButton button_cancel;
+	
+	private MyOtherBlueLabel button_confirm;
+	private MyOtherRedLabel button_cancel;
+	
 	private String orgID, receiveDate, deliverManID;
 	private ArrayList<String> allOrderIDs;
 	private double receivePrice;
@@ -145,15 +149,15 @@ public class businessReceiveUI extends JPanel {
 		label4.setFont(font);
 		this.add(label4);
 
-		button_confirm = new JButton("确定");
+		button_confirm = new MyOtherBlueLabel("确定");
 		button_confirm.setBounds(250, 540, 100, 30);
 		button_confirm.addMouseListener(listener);
-		button_confirm.setFont(buttonfont);
+		
 		this.add(button_confirm);
 
-		button_cancel = new JButton("取消");
+		button_cancel = new MyOtherRedLabel("取消");
 		button_cancel.setBounds(420, 540, 100, 30);
-		button_cancel.setFont(buttonfont);
+		
 		button_cancel.addMouseListener(listener);
 		this.add(button_cancel);
 		
@@ -271,13 +275,20 @@ public class businessReceiveUI extends JPanel {
 
 		}
 
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
+		public void mousePressed(MouseEvent e) {
+			if(e.getSource()==button_cancel){
+				button_cancel.whenPressed();
+			}else if (e.getSource()==button_confirm) {
+				button_confirm.whenPressed();
+			}
 		}
 
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+		public void mouseReleased(MouseEvent e) {
+			if(e.getSource()==button_cancel){
+				button_cancel.setMyColor();
+			}else if (e.getSource()==button_confirm) {
+				button_confirm.setMyColor();
+			}
 
 		}
 

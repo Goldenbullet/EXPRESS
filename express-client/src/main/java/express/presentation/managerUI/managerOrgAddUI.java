@@ -21,6 +21,8 @@ import javax.swing.table.DefaultTableModel;
 import express.businessLogic.infoManageBL.OrgForManager;
 import express.businesslogicService.managerBLService.OrgManageBLService;
 import express.po.OrgProperty;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockError;
 import express.vo.OrganizationVO;
@@ -30,7 +32,8 @@ public class managerOrgAddUI extends JDialog {
 	
 	
 	private JPanel tippane;
-	private JButton ok, exit;
+	private MyOtherBlueLabel ok;
+	private MyOtherGreenLabel exit;
 	private JTextField orgnametf, orgidtf, citytf, orgaddtf;
 	private JComboBox orgtypecb;
 	private DefaultTableModel tmodel;
@@ -44,7 +47,7 @@ public class managerOrgAddUI extends JDialog {
 		this.setLayout(null);
 		this.setSize(300, 300);
 		this.setLocationRelativeTo(null);
-
+		this.getContentPane().setBackground(Color.white);
 		int leftside1 = 10;
 		int leftside2 = 100;
 		Font font = new Font("幼圆", Font.PLAIN, 20);
@@ -108,16 +111,16 @@ public class managerOrgAddUI extends JDialog {
 		orgidtf.setFont(f);
 		this.add(orgidtf);
 
-		ok = new JButton("确认");
+		ok = new MyOtherBlueLabel("确认");
 		ok.setBounds(30, 225, 100, 30);
 		ok.addMouseListener(lis);
-		ok.setFont(buttonfont);
+		
 		this.add(ok);
 
-		exit = new JButton("取消");
+		exit = new MyOtherGreenLabel("取消");
 		exit.setBounds(160, 225, 100, 30);
 		exit.addMouseListener(lis);
-		exit.setFont(buttonfont);
+	
 		this.add(exit);
 		
 		tippane=new JPanel();
@@ -260,14 +263,21 @@ public class managerOrgAddUI extends JDialog {
 
 		@Override
 		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==ok){
+				ok.whenPressed();
+			}else if (arg0.getSource()==exit) {
+				exit.whenPressed();
+			}
 
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
+			if(arg0.getSource()==ok){
+				ok.setMyColor();
+			}else if (arg0.getSource()==exit) {
+				exit.setMyColor();
+			}
 		}
 
 	}

@@ -1,5 +1,6 @@
 package express.presentation.managerUI;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -7,6 +8,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -14,6 +16,8 @@ import javax.swing.table.DefaultTableModel;
 import express.businessLogic.examDocumentBL.ExamDocument;
 import express.businesslogicService.managerBLService.ExamDocumentBLService;
 import express.po.GoodsArrivalStatus;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
 import express.vo.ArrivalDocBusinessHallVO;
 
 public class BusinessHallArrivalViewUI extends JDialog{
@@ -22,7 +26,8 @@ public class BusinessHallArrivalViewUI extends JDialog{
 	private ArrivalDocBusinessHallVO vo;
 	private DefaultTableModel tmodel;
 	private ExamDocumentBLService examdoc;
-	private JButton ok, exit;
+	private MyOtherBlueLabel ok;
+	private MyOtherGreenLabel exit;
 	
 	public BusinessHallArrivalViewUI(DefaultTableModel tablemodel,ArrivalDocBusinessHallVO vo){
 		this.id = vo.getTransferDocID();
@@ -30,7 +35,9 @@ public class BusinessHallArrivalViewUI extends JDialog{
 		this.setLayout(null);
 		this.setSize(500, 280);
 		this.setLocationRelativeTo(null);
-
+		this.getContentPane().setBackground(Color.white);
+		
+		
 		this.vo = vo;
 		tmodel = tablemodel;
 		examdoc = new ExamDocument();
@@ -97,15 +104,13 @@ public class BusinessHallArrivalViewUI extends JDialog{
 			state = "丢失";
 		tf[4].setText(state);
 		
-		ok = new JButton("通过");
+		ok = new MyOtherBlueLabel("通过");
 		ok.setBounds(leftside2, 190, 80, 30);
-		ok.setFont(font);
 		ok.addMouseListener(lis);
 		this.add(ok);
 
-		exit = new JButton("取消");
+		exit = new MyOtherGreenLabel("取消");
 		exit.setBounds(leftside2 + width + 30, 190, 80, 30);
-		exit.setFont(font);
 		exit.addMouseListener(lis);
 		this.add(exit);
 	}
@@ -144,13 +149,21 @@ public class BusinessHallArrivalViewUI extends JDialog{
 
 		@Override
 		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==ok){
+				ok.whenPressed();
+			}else if (arg0.getSource()==exit) {
+				exit.whenPressed();
+			}
 			
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			if(arg0.getSource()==ok){
+				ok.setMyColor();
+			}else if (arg0.getSource()==exit) {
+				exit.setMyColor();
+			}
 			
 		}
 		

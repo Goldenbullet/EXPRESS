@@ -1,5 +1,6 @@
 package express.presentation.adminUI;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -9,35 +10,33 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import express.businessLogic.infoManageBL.Admin;
 import express.businesslogicService.adminBLService.AdminBLService;
 import express.po.UserRole;
-import express.presentation.mainUI.TipBlock;
-import express.presentation.mainUI.TipBlockEmpty;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherRedLabel;
 import express.vo.UserInfoAdminVO;
 
 public class AdminAddUI extends JDialog {
 
 	private JTextField nametf, idtf, keytf;
-	private JButton ok, exit;
+	private MyOtherBlueLabel ok;
+	private MyOtherRedLabel exit;
 	private JComboBox positioncb;
 	private String name, position, id, key;
 	private UserRole posit;
 	private Object[] values;
 	private DefaultTableModel tmodel;
-	
+
 	public AdminAddUI(DefaultTableModel tablemodel) {
-		
-		
 		this.setTitle("添加用户信息");
 		this.setLayout(null);
 		this.setSize(300, 250);
 		this.setLocationRelativeTo(null);
-
+		this.getContentPane().setBackground(Color.white);
 		tmodel = tablemodel;
 		Font font = new Font("幼圆", Font.PLAIN, 20);
 		Font f = new Font("方正隶变简体", Font.PLAIN, 18);
@@ -87,15 +86,13 @@ public class AdminAddUI extends JDialog {
 		keytf.setFont(f);
 		this.add(keytf);
 
-		ok = new JButton("确认");
+		ok = new MyOtherBlueLabel("确认");
 		ok.setBounds(30, 170, 100, 30);
-		ok.setFont(buttonf);
 		ok.addMouseListener(lis);
 		this.add(ok);
 
-		exit = new JButton("取消");
+		exit = new MyOtherRedLabel("取消");
 		exit.setBounds(150, 170, 100, 30);
-		exit.setFont(buttonf);
 		exit.addMouseListener(lis);
 		this.add(exit);
 	}
@@ -120,9 +117,6 @@ public class AdminAddUI extends JDialog {
 				if (name.isEmpty() || id.isEmpty() || key.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "信息未填写完整", "提示",
 							JOptionPane.ERROR_MESSAGE);
-				
-					
-					
 				} else {	
 					
 					posit = UserRole.values()[positioncb.getSelectedIndex()+1];
@@ -163,16 +157,23 @@ public class AdminAddUI extends JDialog {
 		}
 
 		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+		public void mousePressed(MouseEvent e) {
+			if(e.getSource()==ok){
+				ok.whenPressed();
+			}else if (e.getSource()==exit) {
+				exit.whenPressed();
+			}
 
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+		public void mouseReleased(MouseEvent e) {
+			if(e.getSource()==ok){
+				ok.setMyColor();
+			}else if (e.getSource()==exit) {
+				exit.setMyColor();
 
 		}
-
 	}
+   }
 }

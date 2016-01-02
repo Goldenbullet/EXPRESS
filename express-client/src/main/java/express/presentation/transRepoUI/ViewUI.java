@@ -23,6 +23,8 @@ import express.businesslogicService.transcenterRepoBLService.ScanRepoBLService;
 import express.po.Area;
 import express.presentation.mainUI.DateChooser;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherOrangeLabel;
 import express.presentation.mainUI.MyScrollPane;
 import express.vo.RepoCacheVO;
 import express.vo.RepoPositionVO;
@@ -31,7 +33,8 @@ public class ViewUI extends JPanel {
 
 	private MainUIService m;
 
-	private JButton button_view, button_return;
+	private MyOtherBlueLabel button_view;
+	private MyOtherOrangeLabel button_return;
 	private JPanel inventory, sum;
 	private JLabel title, tip, title1, title4, title5, title6, title7;
 	private JTextField datetf, datetf2;
@@ -115,18 +118,15 @@ public class ViewUI extends JPanel {
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		this.add(scrollPane);
 
-		button_view = new JButton();
-		button_view.setFont(f1);
-		button_view.setText("查看库存信息");
+		button_view = new MyOtherBlueLabel("查看库存信息");
+
 		button_view.setBounds(100, 600, 200, 40);
 		button_view.setBackground(Color.WHITE);
 		this.add(button_view);
 
-		button_return = new JButton();
-		button_return.setFont(f1);
-		button_return.setText("返回菜单");
+		button_return = new MyOtherOrangeLabel("返回菜单");
+
 		button_return.setBounds(550, 600, 200, 40);
-		button_return.setBackground(Color.WHITE);
 		this.add(button_return);
 
 		Listener listener = new Listener();
@@ -400,14 +400,21 @@ public class ViewUI extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
+			if(e.getSource()==button_return){
+				button_return.whenPressed();
+			}else if (e.getSource()==button_view) {
+				button_view.whenPressed();
+			}
 
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
+			if(e.getSource()==button_return){
+				button_return.setMyColor();
+			}else if (e.getSource()==button_view) {
+				button_view.setMyColor();
+			}
 		}
 
 	}

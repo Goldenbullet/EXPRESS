@@ -23,6 +23,9 @@ import express.businesslogicService.transcenterRepoBLService.InDocblService;
 import express.po.Area;
 import express.po.RepoPosition;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyOtherBlueLabel;
+import express.presentation.mainUI.MyOtherGreenLabel;
+import express.presentation.mainUI.MyOtherOrangeLabel;
 import express.presentation.mainUI.TipBlock;
 import express.presentation.mainUI.TipBlockEmpty;
 import express.presentation.mainUI.TipBlockError;
@@ -32,7 +35,9 @@ public class AdjustUI extends JPanel {
 
 	private JPanel tippane;
 	private JComboBox<String> idbox, areaBox, rowBox;
-	private JButton button_confirm, button_cancel, button_exit;
+	private MyOtherBlueLabel button_confirm;
+	private MyOtherGreenLabel button_cancel;
+	private MyOtherOrangeLabel button_exit;
 	private JTextField preArea, preRow, preShelf, preBlock, textArea6,
 			textArea7;
 	private String orgID = IDKeeper.getOrgID();
@@ -196,25 +201,22 @@ public class AdjustUI extends JPanel {
 
 		JListener listener = new JListener();
 
-		button_confirm = new JButton("确定");
+		button_confirm = new MyOtherBlueLabel("确定");
 		button_confirm.setBounds(50, 600, 160, 40);
 		button_confirm.addMouseListener(listener);
-		button_confirm.setFont(f1);
-		button_confirm.setBackground(Color.WHITE);
+
 		this.add(button_confirm);
 
-		button_cancel = new JButton("取消");
+		button_cancel = new MyOtherGreenLabel("取消");
 		button_cancel.setBounds(320, 600, 160, 40);
 		button_cancel.addMouseListener(listener);
-		button_cancel.setFont(f1);
-		button_cancel.setBackground(Color.WHITE);
+
 		this.add(button_cancel);
 
-		button_exit = new JButton("返回菜单");
+		button_exit = new MyOtherOrangeLabel("返回菜单");
 		button_exit.setBounds(590, 600, 160, 40);
 		button_exit.addMouseListener(listener);
-		button_exit.setFont(f1);
-		button_exit.setBackground(Color.WHITE);
+
 		this.add(button_exit);
 
 		// areaBox.addMouseListener(listener);
@@ -413,11 +415,23 @@ public class AdjustUI extends JPanel {
 		}
 
 		public void mousePressed(MouseEvent arg0) {
-
+			if(arg0.getSource()==button_confirm){
+				button_confirm.whenPressed();
+			}else if (arg0.getSource()==button_cancel) {
+				button_cancel.whenPressed();
+			}else if (arg0.getSource()==button_exit) {
+				button_exit.whenPressed();
+			}
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
-
+			if(arg0.getSource()==button_confirm){
+				button_confirm.setMyColor();
+			}else if (arg0.getSource()==button_cancel) {
+				button_cancel.setMyColor();
+			}else if (arg0.getSource()==button_exit) {
+				button_exit.setMyColor();
+			}
 		}
 
 	}
