@@ -177,6 +177,7 @@ public class ArrivalDocBusinessHall implements BusinessSaleArrivalDocumentblServ
 	public boolean changeBusinessHallArrivalDoc(ArrivalDocBusinessHallVO vo){
 		ArrivalDocBusinessHallPO po=new ArrivalDocBusinessHallPO(vo.getArriveTime(), vo.getTransferDocID(), vo.getDeparture(),
 				vo.getArrivalStatus(), vo.getOrderID());
+		po.setState(true);
 		try{
 			rmiObj.changeBusinessHallArrivalDoc(po);
 			return true;

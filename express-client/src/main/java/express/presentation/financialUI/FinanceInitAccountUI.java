@@ -34,6 +34,7 @@ import express.po.OrgProperty;
 import express.po.UserRole;
 import express.presentation.mainUI.DateChooser;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.MyScrollPane;
 import express.presentation.mainUI.MyTableModel;
 import express.vo.BankAccountVO;
 import express.vo.OrganizationVO;
@@ -61,21 +62,21 @@ public class FinanceInitAccountUI extends JPanel {
 	private int labelheight = 30;
 	private int tablewidth = 720;
 	private int tableheight = 480;
-	private Font font = new Font("楷体", Font.PLAIN, 18);
-	private Font f = new Font("仿宋", Font.PLAIN, 16);
+	private Font font = new Font("楷体", Font.PLAIN, 20);
+	private Font f = new Font("仿宋", Font.PLAIN, 18);
 	private OrgInfoManageService orginfo;
 	private String changeunder = "<HTML><U>修改</U></HTML>";
 	private String confirmunder = "<HTML><U>确认</U></HTML>";
-	private String staffid, orgid, vehicleid, repoid, accountname;
 	private InnerAccountBLService iab;
 	private Color c;
 	private Listener listener;
 	private Foclistener foclis;
 
-	public FinanceInitAccountUI() {
+	public FinanceInitAccountUI(MainUIService main) {
 		setLayout(null);
 		this.setBounds(0, 0, 850, 700);
 		this.setBackground(Color.WHITE);
+		Font buttonfont = new Font("隶书", Font.PLAIN, 18);
 
 		listener = new Listener();
 		foclis = new Foclistener();
@@ -110,17 +111,17 @@ public class FinanceInitAccountUI extends JPanel {
 
 		ok = new JButton("新建");
 		ok.setBounds(180, 640, 110, 30);
-		ok.setFont(font);
+		ok.setFont(buttonfont);
 		this.add(ok);
 
 		detele = new JButton("删除");
 		detele.setBounds(340, 640, 110, 30);
-		detele.setFont(font);
+		detele.setFont(buttonfont);
 		this.add(detele);
 
 		add = new JButton("添加");
 		add.setBounds(500, 640, 110, 30);
-		add.setFont(font);
+		add.setFont(buttonfont);
 		this.add(add);
 
 		ok.addMouseListener(listener);
@@ -188,6 +189,10 @@ public class FinanceInitAccountUI extends JPanel {
 		JScrollPane scrollPanes = new JScrollPane(table[0]);
 		scrollPanes.setFont(font);
 		scrollPanes.setBounds(0, 0, tablewidth, tableheight);
+		MyScrollPane render = new MyScrollPane();
+		scrollPanes.getVerticalScrollBar().setUI(render);
+		render.setscrollbar();
+		updateUI();
 		staff.add(scrollPanes);
 
 		JLabel namel = new JLabel("姓名");
@@ -330,6 +335,10 @@ public class FinanceInitAccountUI extends JPanel {
 		JScrollPane scrollPanes = new JScrollPane(table[1]);
 		scrollPanes.setFont(font);
 		scrollPanes.setBounds(0, 0, tablewidth, tableheight);
+		MyScrollPane render = new MyScrollPane();
+		scrollPanes.getVerticalScrollBar().setUI(render);
+		render.setscrollbar();
+		updateUI();
 		org.add(scrollPanes);
 
 		JLabel cityl = new JLabel("所属城市");
@@ -429,6 +438,10 @@ public class FinanceInitAccountUI extends JPanel {
 		JScrollPane scrollPanes = new JScrollPane(table[4]);
 		scrollPanes.setFont(font);
 		scrollPanes.setBounds(0, 0, tablewidth, tableheight);
+		MyScrollPane render = new MyScrollPane();
+		scrollPanes.getVerticalScrollBar().setUI(render);
+		render.setscrollbar();
+		updateUI();
 		bankaccount.add(scrollPanes);
 
 		JLabel accountnamel = new JLabel("账户名");
@@ -519,6 +532,10 @@ public class FinanceInitAccountUI extends JPanel {
 		JScrollPane scrollPanes = new JScrollPane(table[2]);
 		scrollPanes.setFont(font);
 		scrollPanes.setBounds(0, 0, tablewidth, tableheight);
+		MyScrollPane render = new MyScrollPane();
+		scrollPanes.getVerticalScrollBar().setUI(render);
+		render.setscrollbar();
+		updateUI();
 		vehicle.add(scrollPanes);
 
 		JLabel vehiclenuml = new JLabel("车牌号");
@@ -610,6 +627,10 @@ public class FinanceInitAccountUI extends JPanel {
 		JScrollPane scrollPanes = new JScrollPane(table[3]);
 		scrollPanes.setFont(font);
 		scrollPanes.setBounds(0, 0, tablewidth, tableheight);
+		MyScrollPane render = new MyScrollPane();
+		scrollPanes.getVerticalScrollBar().setUI(render);
+		render.setscrollbar();
+		updateUI();
 		repo.add(scrollPanes);
 
 		JLabel repoaddressl = new JLabel("仓库所在机构代号");
@@ -704,6 +725,10 @@ public class FinanceInitAccountUI extends JPanel {
 		JScrollPane scrollPanes = new JScrollPane(table[5]);
 		scrollPanes.setFont(font);
 		scrollPanes.setBounds(0, 0, tablewidth, 610);
+		MyScrollPane render = new MyScrollPane();
+		scrollPanes.getVerticalScrollBar().setUI(render);
+		render.setscrollbar();
+		updateUI();
 		showprevious.add(scrollPanes);
 	}
 
@@ -806,8 +831,8 @@ public class FinanceInitAccountUI extends JPanel {
 				result += "ID填写错误";
 			}
 		} else {
-			if (!idtemp.equals(staffid)) {
-				result += "ID不可修改";
+			if ((iab.isUserIDAvailable(idtemp)) || (!checkID(idtemp))) {
+				result += "ID填写错误";
 			}
 		}
 		if (!iab.isCellPhoneAvailable(phonetemp)) {
@@ -826,8 +851,8 @@ public class FinanceInitAccountUI extends JPanel {
 				result += "机构代号错误";
 			}
 		} else {
-			if (!orgid.equals(this.orgid)) {
-				result += "机构代号不可修改";
+			if ((!iab.isOrgIDAvailable(orgid)) || (!checkID(orgid))) {
+				result += "机构代号错误";
 			}
 		}
 		if (iab.isOrgNameAvailable(orgname)) {
@@ -860,8 +885,8 @@ public class FinanceInitAccountUI extends JPanel {
 				result += "车辆代号错误";
 			}
 		} else {
-			if (!vehicleid.equals(this.vehicleid)) {
-				result += "车辆代号不可修改";
+			if (!iab.isCarIDAvailable(vehicleid)) {
+				result += "车辆代号错误";
 			}
 		}
 		if (iab.isCarLicenseAvailable(vehiclenum)) {
@@ -886,8 +911,8 @@ public class FinanceInitAccountUI extends JPanel {
 				result += "该账户名已存在";
 			}
 		} else {
-			if (!accountname.equals(this.accountname)) {
-				result += "账户名不可修改";
+			if (!iab.checkDuplication(accountname)) {
+				result += "该账户名不存在";
 			}
 		}
 		if (!iab.isMoneyValid(total + "")) {
@@ -1065,7 +1090,7 @@ public class FinanceInitAccountUI extends JPanel {
 				double income = Double.parseDouble(incometf.getText());
 				double expense = Double.parseDouble(expensetf.getText());
 				double total = income - expense;
-				String result = checkaccountinfo(accountname, total + "", true);
+				String result = checkaccountinfo(accountname, total + "",true);
 
 				if (result.isEmpty()) {
 					balancetf.setText(total + "");
@@ -1090,25 +1115,29 @@ public class FinanceInitAccountUI extends JPanel {
 	private void changestaff(int row) {
 		boolean ok = true;
 		boolean complete = true;
+		
+		String name = (String) tableModel[0].getValueAt(row, 1);
+		String gender = (String) tableModel[0].getValueAt(row, 2);
+		String id = (String) tableModel[0].getValueAt(row, 7);
+		String city = (String) tableModel[0].getValueAt(row, 6);
+		String phone = (String) tableModel[0].getValueAt(row, 3);
+		String date = (String) tableModel[0].getValueAt(row, 4);
+		UserRole posit = UserRole.values()[positioncb.getSelectedIndex() + 1];
+		boolean sex = gender.equals("男");
+		String[] temp = { id, phone, name, date };
+		complete = checkempty(temp);
 
-		if (tableModel[0].getValueAt(row, 1) == null)
-			complete = false;
-		if (tableModel[0].getValueAt(row, 3) == null)
-			complete = false;
-		if (tableModel[0].getValueAt(row, 4) == null)
-			complete = false;
-		if (tableModel[0].getValueAt(row, 6) == null)
-			complete = false;
-
+//		if (tableModel[0].getValueAt(row, 1) == null)
+//			complete = false;
+//		if (tableModel[0].getValueAt(row, 3) == null)
+//			complete = false;
+//		if (tableModel[0].getValueAt(row, 4) == null)
+//			complete = false;
+//		if (tableModel[0].getValueAt(row, 6) == null)
+//			complete = false;
+		
 		if (complete) {
-			String name = (String) tableModel[0].getValueAt(row, 1);
-			String gender = (String) tableModel[0].getValueAt(row, 2);
-			String id = (String) tableModel[0].getValueAt(row, 7);
-			String city = (String) tableModel[0].getValueAt(row, 6);
-			String phone = (String) tableModel[0].getValueAt(row, 3);
-			String date = (String) tableModel[0].getValueAt(row, 4);
-			UserRole posit = UserRole.values()[positioncb.getSelectedIndex() + 1];
-			boolean sex = gender.equals("男");
+		
 			String result = checkstaffinfo(id, phone, false);
 			if (!result.isEmpty()) {
 				ok = false;
@@ -1137,23 +1166,25 @@ public class FinanceInitAccountUI extends JPanel {
 	private void changeorg(int row) {
 		boolean complete = true;
 
-		if (tableModel[1].getValueAt(row, 1) == null)
-			complete = false;
-		if (tableModel[1].getValueAt(row, 2) == null)
-			complete = false;
-		if (tableModel[1].getValueAt(row, 4) == null)
-			complete = false;
-		if (tableModel[1].getValueAt(row, 5) == null)
-			complete = false;
-
+//		if (tableModel[1].getValueAt(row, 1) == null)
+//			complete = false;
+//		if (tableModel[1].getValueAt(row, 2) == null)
+//			complete = false;
+//		if (tableModel[1].getValueAt(row, 4) == null)
+//			complete = false;
+//		if (tableModel[1].getValueAt(row, 5) == null)
+//			complete = false;
+		
+		String city = (String) tableModel[1].getValueAt(row, 1);
+		String orgname = (String) tableModel[1].getValueAt(row, 2);
+		String orgtype = (String) tableModel[1].getValueAt(row, 3);
+		String orgid = (String) tableModel[1].getValueAt(row, 4);
+		String orgadd = (String) tableModel[1].getValueAt(row, 5);
+		String result = checkorginfo(orgid, orgname, false);
+		String[] temp = { city, orgname, orgid, orgadd };
+		complete = checkempty(temp);
+		
 		if (complete) {
-			String city = (String) tableModel[1].getValueAt(row, 1);
-			String orgname = (String) tableModel[1].getValueAt(row, 2);
-			String orgtype = (String) tableModel[1].getValueAt(row, 3);
-			String orgid = (String) tableModel[1].getValueAt(row, 4);
-			String orgadd = (String) tableModel[1].getValueAt(row, 5);
-			String result = checkorginfo(orgid, orgname, false);
-
 			if (result.isEmpty()) {
 				OrgProperty orgpro = tansorgtype(orgtype);
 				OrganizationVO vo = new OrganizationVO(city, orgname, orgadd,
@@ -1172,21 +1203,23 @@ public class FinanceInitAccountUI extends JPanel {
 	private void changevehicle(int row) {
 		boolean complete = true;
 
-		if (tableModel[2].getValueAt(row, 1) == null)
-			complete = false;
-		if (tableModel[2].getValueAt(row, 2) == null)
-			complete = false;
-		if (tableModel[2].getValueAt(row, 3) == null)
-			complete = false;
-		if (tableModel[2].getValueAt(row, 4) == null)
-			complete = false;
-
+//		if (tableModel[2].getValueAt(row, 1) == null)
+//			complete = false;
+//		if (tableModel[2].getValueAt(row, 2) == null)
+//			complete = false;
+//		if (tableModel[2].getValueAt(row, 3) == null)
+//			complete = false;
+//		if (tableModel[2].getValueAt(row, 4) == null)
+//			complete = false;
+		
+		String vehiclenum = (String) tableModel[2].getValueAt(row, 1);
+		String org = (String) tableModel[2].getValueAt(row, 2);
+		String vehicleid = (String) tableModel[2].getValueAt(row, 3);
+		int time = (int) tableModel[2].getValueAt(row, 4);
+		String[] temp = { vehiclenum, org, vehicleid, time+""};
+		complete = checkempty(temp);
+		
 		if (complete) {
-			String vehiclenum = (String) tableModel[2].getValueAt(row, 1);
-			String org = (String) tableModel[2].getValueAt(row, 2);
-			String vehicleid = (String) tableModel[2].getValueAt(row, 3);
-			int time = (int) tableModel[2].getValueAt(row, 4);
-
 			String result = checkvehicleinfo(vehicleid, vehiclenum, time, false);
 			if (result.isEmpty()) {
 				VehicleInfoVO vo = new VehicleInfoVO(vehiclenum, vehicleid,
@@ -1205,23 +1238,27 @@ public class FinanceInitAccountUI extends JPanel {
 	private void changerepo(int row) {
 		boolean complete = true;
 
-		if (tableModel[3].getValueAt(row, 1) == null)
-			complete = false;
-		if (tableModel[3].getValueAt(row, 2) == null)
-			complete = false;
-		if (tableModel[3].getValueAt(row, 3) == null)
-			complete = false;
-		if (tableModel[3].getValueAt(row, 4) == null)
-			complete = false;
-		if (tableModel[3].getValueAt(row, 5) == null)
-			complete = false;
-
+//		if (tableModel[3].getValueAt(row, 1) == null)
+//			complete = false;
+//		if (tableModel[3].getValueAt(row, 2) == null)
+//			complete = false;
+//		if (tableModel[3].getValueAt(row, 3) == null)
+//			complete = false;
+//		if (tableModel[3].getValueAt(row, 4) == null)
+//			complete = false;
+//		if (tableModel[3].getValueAt(row, 5) == null)
+//			complete = false;
+		
+		String repoaddress = (String) tableModel[3].getValueAt(row, 1);
+		int airrow = (int) tableModel[3].getValueAt(row, 2);
+		int trainrow = (int) tableModel[3].getValueAt(row, 3);
+		int truckrow = (int) tableModel[3].getValueAt(row, 4);
+		int flexiblerow = (int) tableModel[3].getValueAt(row, 4);
+		String[] temp = { repoaddress, airrow+"", trainrow+"", truckrow+"",
+				flexiblerow+"" };
+		complete = checkempty(temp);
+		
 		if (complete) {
-			String repoaddress = (String) tableModel[3].getValueAt(row, 1);
-			int airrow = (int) tableModel[3].getValueAt(row, 2);
-			int trainrow = (int) tableModel[3].getValueAt(row, 3);
-			int truckrow = (int) tableModel[3].getValueAt(row, 4);
-			int flexiblerow = (int) tableModel[3].getValueAt(row, 4);
 
 			RepoInfoVO vo = new RepoInfoVO(repoaddress, airrow, trainrow,
 					truckrow, flexiblerow);
@@ -1235,19 +1272,22 @@ public class FinanceInitAccountUI extends JPanel {
 	private void changebankaccount(int row) {
 		boolean complete = true;
 
-		if (tableModel[4].getValueAt(row, 1) == null)
-			complete = false;
-		if (tableModel[4].getValueAt(row, 2) == null)
-			complete = false;
-		if (tableModel[4].getValueAt(row, 3) == null)
-			complete = false;
-
-		if (complete) {
-			String accountname = (String) tableModel[4].getValueAt(row, 1);
-			double income = (Double) tableModel[4].getValueAt(row, 2);
-			double expense = (Double) tableModel[4].getValueAt(row, 3);
+//		if (tableModel[4].getValueAt(row, 1) == null)
+//			complete = false;
+//		if (tableModel[4].getValueAt(row, 2) == null)
+//			complete = false;
+//		if (tableModel[4].getValueAt(row, 3) == null)
+//			complete = false;
+		
+		String accountname = (String) tableModel[4].getValueAt(row, 1);
+		double income = (Double) tableModel[4].getValueAt(row, 2);
+		double expense = (Double) tableModel[4].getValueAt(row, 3);
+		String[] temp = { accountname, income+"", expense+"" };
+		complete = checkempty(temp);
+		
+		if (complete) {			
 			double total = income - expense;
-			String result = checkaccountinfo(accountname, total + "", false);
+			String result = checkaccountinfo(accountname, total + "",false);
 
 			if (result.isEmpty()) {
 				tableModel[4].setValueAt(total, row, 4);
@@ -1314,17 +1354,6 @@ public class FinanceInitAccountUI extends JPanel {
 					if (tableModel[i].getValueAt(row, col).equals(changeunder)) {
 						tableModel[i].setrowedit();
 						tableModel[i].setValueAt(confirmunder, row, col);
-						if (i == 0) 
-							staffid = (String) tableModel[i].getValueAt(row, 1);
-						else if (i == 1)
-							orgid = (String) tableModel[i].getValueAt(row, 4);
-						else if(i==2)
-							vehicleid = (String) tableModel[i].getValueAt(row, 3);
-						else if(i==3)
-							repoid = (String) tableModel[i].getValueAt(row, 1);
-						else if(i==4)
-							accountname = (String) tableModel[i].getValueAt(row, 1);
-						
 					} else if (tableModel[i].getValueAt(row, col).equals(
 							confirmunder)) {
 						tableModel[i].setrowunedit();

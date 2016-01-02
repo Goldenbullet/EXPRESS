@@ -4,11 +4,8 @@ import java.io.Serializable;
 
 import express.po.RepoPosition;
 
-public class InDocVO implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8769532078588459715L;
+public class InDocVO extends DocumentVO{
+
 	private String deliveryNumber;
 	private String date;
 	private String arrival;

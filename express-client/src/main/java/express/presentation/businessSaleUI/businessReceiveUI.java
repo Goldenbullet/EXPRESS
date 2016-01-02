@@ -25,10 +25,16 @@ import express.businessLogic.IDKeeper;
 import express.businessLogic.documentBL.ReceiveDoc;
 import express.businesslogicService.businessSaleBLService.BusinessSaleReceiveDocumentblService;
 import express.presentation.mainUI.DateChooser;
+import express.presentation.mainUI.TipBlock;
+import express.presentation.mainUI.TipBlockEmpty;
+import express.presentation.mainUI.TipBlockError;
 import express.vo.ReceiveDocVO;
 
 public class businessReceiveUI extends JPanel {
 
+	
+	
+	private JPanel tippane;
 	private JTextField textArea0;
 	private JTextField textArea1;
 	private JTextField textArea2;
@@ -51,8 +57,9 @@ public class businessReceiveUI extends JPanel {
 		int labelwidth = 40;
 		int base = 50;
 
-		Font font = new Font("楷体", Font.PLAIN, 18);
-		Font f = new Font("仿宋", Font.PLAIN, 16);
+		Font font = new Font("幼圆", Font.PLAIN, 20);
+		Font f = new Font("方正隶变简体", Font.PLAIN, 18);
+		Font buttonfont = new Font("隶书", Font.PLAIN, 18);
 
 		setLayout(null);
 		this.setBounds(0, 0, 850, 700);
@@ -141,12 +148,23 @@ public class businessReceiveUI extends JPanel {
 		button_confirm = new JButton("确定");
 		button_confirm.setBounds(250, 540, 100, 30);
 		button_confirm.addMouseListener(listener);
+		button_confirm.setFont(buttonfont);
 		this.add(button_confirm);
 
 		button_cancel = new JButton("取消");
 		button_cancel.setBounds(420, 540, 100, 30);
+		button_cancel.setFont(buttonfont);
 		button_cancel.addMouseListener(listener);
 		this.add(button_cancel);
+		
+		
+		
+		tippane=new JPanel();
+		 tippane.setSize(850,40);
+		tippane.setLocation(0, 660);
+		tippane.setBackground(Color.white);
+		tippane.setLayout(null);
+		this.add(tippane);
 
 	}
 
@@ -217,19 +235,25 @@ public class businessReceiveUI extends JPanel {
 				} 
 				
 				if (!complete) {
-					JOptionPane.showMessageDialog(null, "信息未填写完整", "提示",
-							JOptionPane.ERROR_MESSAGE);
+					TipBlockEmpty block=new TipBlockEmpty("信息未填写完整");
+					tippane.add(block);
+					block.show();
+					block=null;
 				} else {
 					ReceiveDocVO vo = new ReceiveDocVO(receiveDate,
 							receivePrice, deliverManID, allOrderIDs, orgID);
 					BusinessSaleReceiveDocumentblService bsrd = new ReceiveDoc();
 					if (bsrd.addReceiveDoc(vo)) {
-						JOptionPane.showMessageDialog(null, "生成收款单成功", "提示",
-								JOptionPane.INFORMATION_MESSAGE);
+						TipBlock block=new TipBlock("生成收款单成功");
+						tippane.add(block);
+						block.show();
+						block=null;
 						bsrd.endReceiveDoc();
 					} else {
-						JOptionPane.showMessageDialog(null, "今天该快递员已经建立收款单",
-								"提示", JOptionPane.WARNING_MESSAGE);
+						TipBlockError block=new TipBlockError("今日已建立收款单");
+						tippane.add(block);
+						block.show();
+						block=null;
 					}
 				}
 				complete = true;

@@ -26,10 +26,16 @@ import express.businessLogic.documentBL.ShipmentDocController;
 import express.businesslogicService.transcenterSaleBLService.TransCenterSaleShipmentDocblService;
 import express.presentation.mainUI.DateChooser;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.TipBlock;
+import express.presentation.mainUI.TipBlockEmpty;
+import express.presentation.mainUI.TipBlockError;
 import express.vo.ShipmentDocTransCenterVO;
 
 public class transSaleShipmentDocUI extends JPanel {
 
+	
+	
+	private JPanel tippane;
 	private JButton button_confirm, button_cancel;
 	private DateChooser datechooser;
 	private JTextField[] tf;
@@ -50,8 +56,9 @@ public class transSaleShipmentDocUI extends JPanel {
 		int labellength = 150;
 		int labelwidth = 30;
 
-		Font font = new Font("楷体", Font.PLAIN, 18);
-		Font f = new Font("仿宋", Font.PLAIN, 16);
+		Font font = new Font("幼圆", Font.PLAIN, 20);
+		Font f = new Font("方正隶变简体", Font.PLAIN, 18);
+		Font buttonfont = new Font("隶书", Font.PLAIN, 18);
 
 		setLayout(null);
 		this.setBounds(0, 0, 850, 700);
@@ -178,15 +185,24 @@ public class transSaleShipmentDocUI extends JPanel {
 
 		button_confirm = new JButton("确定");
 		button_confirm.setBounds(250, 605, 100, 30);
-		button_confirm.setFont(font);
+		button_confirm.setFont(buttonfont);
 		button_confirm.addMouseListener(listener);
 		this.add(button_confirm);
 
 		button_cancel = new JButton("取消");
 		button_cancel.setBounds(400, 605, 100, 30);
 		button_cancel.addMouseListener(listener);
-		button_cancel.setFont(font);
+		button_cancel.setFont(buttonfont);
 		this.add(button_cancel);
+	
+		tippane=new JPanel();
+		 tippane.setSize(850,40);
+		tippane.setLocation(0, 660);
+		tippane.setBackground(Color.white);
+		tippane.setLayout(null);
+		this.add(tippane);
+	
+	
 	}
 
 	private class Foclistener implements FocusListener {
@@ -252,16 +268,24 @@ public class transSaleShipmentDocUI extends JPanel {
 					tf[8].setText(money + "");
 
 					if (tsd.addShipmentDoc(vo)) {
-						JOptionPane.showMessageDialog(null, "生成装车单成功", "提示",
-								JOptionPane.INFORMATION_MESSAGE);
+						
+						
+						TipBlock block=new TipBlock("生成装车单成功");
+						tippane.add(block);
+						block.show();
+						block=null;
 						tsd.endShipmentDoc();
 					} else {
-						JOptionPane.showMessageDialog(null, "订单条形码号输入错误", "提示",
-								JOptionPane.ERROR_MESSAGE);
+						TipBlockError block=new TipBlockError("订单条形码号错误");
+						tippane.add(block);
+						block.show();
+						block=null;
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "信息未填写完整", "提示",
-							JOptionPane.ERROR_MESSAGE);
+					TipBlockEmpty block=new TipBlockEmpty("信息未填写完整");
+					tippane.add(block);
+					block.show();
+					block=null;
 				}
 			} else if (e.getSource() == button_cancel) {
 				tf[1].setText(new SimpleDateFormat("yyyy-MM-dd")

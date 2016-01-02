@@ -137,7 +137,7 @@ public class TransferDoc implements TransCenterTransferDocblService{
 			
 			return totalfee;	
 		}catch(Exception e){
-			e.printStackTrace();
+			//e.printStackTrace();
 			return -1;
 		}
 	}
@@ -177,6 +177,9 @@ public class TransferDoc implements TransCenterTransferDocblService{
 			ArrayList<TransferDocPO> list=rmiObj.getTransferDoclist();
 			ArrayList<TransferDocVO> unexam=new ArrayList<TransferDocVO>();
 			
+			System.out.println("LIstSize::"+list.size());
+			
+			
 			
 			for(TransferDocPO po:list){
 				if(po.getState()==false){
@@ -196,6 +199,7 @@ public class TransferDoc implements TransCenterTransferDocblService{
 	public boolean changeTransferDoc(TransferDocVO vo){
 		TransferDocPO po=new TransferDocPO(vo.getdate(), vo.gettranscenterNumber(), vo.getflightNumber(), vo.getbegin(), vo.getarrival(), vo.getcontainerNumber(),vo.getcheckMan(), 
 				vo.getmoney(), vo.getTransWay(), vo.getOrderlist());
+		po.setState(true);
 		try{
 			rmiObj.changeTransferDoc(po);
 			return true;

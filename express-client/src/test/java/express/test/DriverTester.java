@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import express.businessLogic.infoManageBL.Driver;
-import express.presentation.userUI.TestLogin;
 import express.rmi.RMIClient;
 import express.vo.DriverInfoVO;
 

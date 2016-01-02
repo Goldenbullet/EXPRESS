@@ -27,10 +27,12 @@ import express.businesslogicService.managerBLService.StaffManageBLService;
 import express.po.UserRole;
 import express.presentation.mainUI.MainUIService;
 import express.presentation.mainUI.MyTableModel;
+import express.presentation.mainUI.TipBlock;
 import express.vo.UserInfoVO;
 
 public class managerMemberUI extends JPanel {
 
+	private JPanel tippane;
 	private JTable table;
 	private MyTableModel tableModel;
 	private TableColumnModel tcm;
@@ -52,8 +54,9 @@ public class managerMemberUI extends JPanel {
 		this.setBounds(0, 0, 850, 700);
 		this.setBackground(Color.WHITE);
 
-		Font font = new Font("楷体", Font.PLAIN, 18);
-		Font f = new Font("仿宋", Font.PLAIN, 16);
+		Font font = new Font("幼圆", Font.PLAIN, 20);
+		Font f = new Font("方正隶变简体", Font.PLAIN, 18);
+		Font buttonfont = new Font("隶书", Font.PLAIN, 18);
 		smb = new StaffForManager();
 		JListener listener = new JListener();
 
@@ -113,20 +116,20 @@ public class managerMemberUI extends JPanel {
 
 		detele = new JButton("删除");
 		detele.setBounds(50, 10, 100, 40);
-		detele.setFont(font);
+		detele.setFont(buttonfont);
 		detele.addMouseListener(listener);
 		this.add(detele);
 
 		add = new JButton("添加");
 		add.setBounds(190, 10, 100, 40);
 		add.addMouseListener(listener);
-		add.setFont(font);
+		add.setFont(buttonfont);
 		this.add(add);
 
 		change = new JButton("查找");
 		change.setBounds(320, 10, 100, 40);
 		change.addMouseListener(listener);
-		change.setFont(font);
+		change.setFont(buttonfont);
 		this.add(change);
 
 		JLabel idl = new JLabel("工号");
@@ -138,6 +141,13 @@ public class managerMemberUI extends JPanel {
 		idtf.setBounds(510, 10, 150, 40);
 		idtf.setFont(f);
 		this.add(idtf);
+
+		tippane = new JPanel();
+		tippane.setSize(850, 40);
+		tippane.setLocation(0, 660);
+		tippane.setBackground(Color.white);
+		tippane.setLayout(null);
+		this.add(tippane);
 	}
 
 	private class JListener implements MouseListener {
@@ -153,8 +163,11 @@ public class managerMemberUI extends JPanel {
 					}
 				}
 				smb.endManage();
-				JOptionPane.showMessageDialog(null, "删除成功", "提示",
-						JOptionPane.INFORMATION_MESSAGE);
+				// JOptionPane.showMessageDialog(null, "删除成功", "提示",
+				// JOptionPane.INFORMATION_MESSAGE);
+				TipBlock block = new TipBlock("删除成功");
+				tippane.add(block);
+				block.show();
 
 			} else if (e.getSource() == add) {
 
@@ -180,37 +193,50 @@ public class managerMemberUI extends JPanel {
 
 				if (col == 8) {
 					if (tableModel.getValueAt(row, col).equals(changeunder)) {
-//						tableModel.setrowedit();
-//						tableModel.setValueAt(confirmunder, row, col);
-						id = (String) tableModel.getValueAt(row, 3);
-						managerMemberChangeUI mmcui = new managerMemberChangeUI(
-								tableModel, id);
-						mmcui.setVisible(true);					
+						tableModel.setrowedit();
+						tableModel.setValueAt(confirmunder, row, col);
+						// id = (String) tableModel.getValueAt(row, 3);
+						// managerMemberChangeUI mmcui = new
+						// managerMemberChangeUI(
+						// tableModel, id);
+						// mmcui.setVisible(true);
+						// }
+					} else if (tableModel.getValueAt(row, col).equals(
+							confirmunder)) {System.out.println(tableModel.getValueAt(row, 1).equals(""));
+						if (tableModel.getValueAt(row, 1).equals("")
+								|| tableModel.getValueAt(row, 3).equals("")
+								|| tableModel.getValueAt(row, 6).equals("")
+								|| tableModel.getValueAt(row, 7).equals("")) {
+							JOptionPane.showMessageDialog(null, "信息未填写完整",
+									"提示", JOptionPane.ERROR_MESSAGE);
+						} else {
+							tableModel.setrowunedit();
+							tableModel.setValueAt(changeunder, row, col);
+
+							String name = (String) tableModel
+									.getValueAt(row, 1);
+							String gender = (String) tableModel.getValueAt(row,
+									2);
+							String id = (String) tableModel.getValueAt(row, 3);
+							String city = (String) tableModel
+									.getValueAt(row, 5);
+							String phone = (String) tableModel.getValueAt(row,
+									6);
+							String date = (String) tableModel
+									.getValueAt(row, 7);
+							UserRole posit = UserRole.values()[positioncb
+									.getSelectedIndex() + 1];
+
+							boolean sex = gender.equals("男");
+							vo = new UserInfoVO(name, sex, id, phone, posit,
+									city, date);
+
+							smb.changeUser(vo, id);
+							JOptionPane.showMessageDialog(null, "信息修改成功", "提示",
+									JOptionPane.INFORMATION_MESSAGE);
+							smb.endManage();
+						}
 					}
-//					} else if (tableModel.getValueAt(row, col).equals(
-//							confirmunder)) {
-//						tableModel.setrowunedit();
-//						tableModel.setValueAt(changeunder, row, col);
-//
-//						String name = (String) tableModel.getValueAt(row, 1);
-//						String gender = (String) tableModel.getValueAt(row, 2);
-//						String position = (String) tableModel
-//								.getValueAt(row, 4);
-//						String id = (String) tableModel.getValueAt(row, 3);
-//						String city = (String) tableModel.getValueAt(row, 5);
-//						String phone = (String) tableModel.getValueAt(row, 6);
-//						String date = (String) tableModel.getValueAt(row, 7);
-//						UserRole posit = UserRole.values()[positioncb
-//								.getSelectedIndex() + 1];
-//						boolean sex = gender.equals("男");
-//
-//						vo = new UserInfoVO(name, sex, id, phone, posit, city,
-//								date);
-//						smb.changeUser(vo, id);
-//						JOptionPane.showMessageDialog(null, "信息修改成功", "提示",
-//								JOptionPane.INFORMATION_MESSAGE);
-//						smb.endManage();
-//					}
 				}
 			}
 			updateUI();

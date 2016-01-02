@@ -279,6 +279,7 @@ public class Order {
 		po.setGoodsInfo(vo.getNumberOfGoods(), vo.getWeight(), vo.getVolume(), vo.getNameOfGoods(), vo.getType(), vo.getPackageType());
 		po.setReceiverInfo(vo.getReceiverName(), vo.getReceiverAddress(), vo.getReceiverWorkPlace(), vo.getReceiverCellPhoneNum(), vo.getReceiverTelephoneNum(), vo.getEndCity());
 		po.setSenderInfo(vo.getSenderName(), vo.getSenderAddress(), vo.getSenderWorkPlace(), vo.getSenderCellPhoneNum(), vo.getSenderTelephoneNum(), vo.getStartCity());
+		po.setState(true);
 		try{
 			rmiObj.changeOrder(po);
 			return true;
@@ -288,54 +289,5 @@ public class Order {
 		}
 		
 	}
-	
-	
-	// Test
-	
-	public static void main(String[] args){
-		try {
-			RMIClient.init();
-		} catch (ClientException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-
-//		12-22   2 6  4 12-24
-		OrderVO vo=new OrderVO();
-		vo.setSenderInfo("海龙", "南京市栖霞区仙林大道", "南京大学", "13139089552", "025-1212", "NanJing");
-		vo.setReceiverInfo("John Locke", "北京市颐和园路", "PKU", "15651705115", "025-909090", "BeiJing");
-		vo.setGoodsInfo(1, 1, 10, "Model", DeliveryType.Fast, PackageType.WoodBox);
-		vo.setGoodsInfo(1, 2.4, 0.2, "Notebook", DeliveryType.Slow, PackageType.WoodBox);
-		Order order=new Order();
-		System.out.println(order.getPredictArrivalTime("南京", "北京").getTime());
-		
-		
-		//order.end();
-		
-		
-//		Search search=new Search();
-//		GoodTransStatusVO vo=search.getOrderIDStatus("0000000000");
-//		
-//		int size=vo.getTime().size();
-//		System.out.println(size);
-//		for(int i=0;i<size;i++){
-//			System.out.println(vo.getTime().get(i));
-//		}
-//		System.out.println(vo.getstatusList().get(0));
-//		
-		
-		//System.out.println(order.getPredictArrivalTime(vo.getEndCity(), vo.getStartCity()));
-		
-		
-		
-	}
-	
-	
-	
-	
-	
-	
-	
 	
 }

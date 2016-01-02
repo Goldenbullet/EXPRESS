@@ -188,6 +188,7 @@ public class ShipmentDocTransCenter {   //不用implements
 	public boolean changeTransCenterShipmentDoc(ShipmentDocTransCenterVO vo){
 		ShipmentDocTransCenterPO po=new ShipmentDocTransCenterPO(vo.getDate(), vo.getTransId(), vo.getArrivalPlace(), vo.getVanID(), vo.getCheckMan(), 
 				vo.getTransMan(), vo.getAllOrder(), vo.getMoney(), vo.getShipmentID(), vo.getStartPlace());
+		po.setState(true);
 		try{
 			rmiObj.changeTransCenterShipmentDoc(po);
 			return true;

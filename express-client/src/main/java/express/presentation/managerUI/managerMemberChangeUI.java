@@ -10,6 +10,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -17,10 +18,14 @@ import express.businessLogic.infoManageBL.StaffForManager;
 import express.businesslogicService.managerBLService.StaffManageBLService;
 import express.po.UserRole;
 import express.presentation.mainUI.DateChooser;
+import express.presentation.mainUI.TipBlock;
 import express.vo.UserInfoVO;
 
 public class managerMemberChangeUI extends JDialog {
 
+	
+	
+	private JPanel tippane;
 	private JTextField nametf, idtf, phonetf, datetf;
 	private JLabel tipphone;
 	private JComboBox gendercb, positioncb, citycb;
@@ -32,6 +37,7 @@ public class managerMemberChangeUI extends JDialog {
 	private DefaultTableModel tmodel;
 	private StaffManageBLService smb;
 	private UserInfoVO vo;
+	private boolean b;
 
 	public managerMemberChangeUI(DefaultTableModel tablemodel, String id) {
 		this.setTitle("修改用户信息");
@@ -43,8 +49,9 @@ public class managerMemberChangeUI extends JDialog {
 		tmodel = tablemodel;
 		int leftside1 = 10;
 		int leftside2 = 100;
-		Font font = new Font("楷体", Font.PLAIN, 18);
-		Font f = new Font("仿宋", Font.PLAIN, 16);
+		Font font = new Font("幼圆", Font.PLAIN, 20);
+		Font f = new Font("方正隶变简体", Font.PLAIN, 18);
+		Font buttonfont = new Font("隶书", Font.PLAIN, 18);
 
 		smb = new StaffForManager();
 		vo = smb.getUser(id);
@@ -146,21 +153,30 @@ public class managerMemberChangeUI extends JDialog {
 
 		ok = new JButton("修改");
 		ok.setBounds(30, 305, 70, 30);
-		ok.setFont(font);
+		ok.setFont(buttonfont);
 		ok.addMouseListener(lis);
 		this.add(ok);
 		
 		detele = new JButton("删除");
 		detele.setBounds(120, 305,70, 30);
-		detele.setFont(font);
+		detele.setFont(buttonfont);
 		detele.addMouseListener(lis);
 		this.add(detele);
 
 		exit = new JButton("取消");
 		exit.setBounds(210, 305, 70, 30);
-		exit.setFont(font);
+		exit.setFont(buttonfont);
 		exit.addMouseListener(lis);
 		this.add(exit);
+		
+		tippane=new JPanel();
+		 tippane.setSize(850,40);
+		tippane.setLocation(0, 660);
+		tippane.setBackground(Color.white);
+		tippane.setLayout(null);
+		this.add(tippane);
+		
+		
 
 	}
 
@@ -203,8 +219,11 @@ public class managerMemberChangeUI extends JDialog {
 						tmodel.setValueAt(city, i, 5);
 						tmodel.setValueAt(phone, i, 6);
 						tmodel.setValueAt(date, i, 7);
-						JOptionPane.showMessageDialog(null, "信息修改成功", "提示",
-								JOptionPane.INFORMATION_MESSAGE);
+						
+						TipBlock block=new TipBlock("修改成功");
+						tippane.add(block);
+						block.show();
+						block=null;
 						break;
 					}
 				}
@@ -215,8 +234,10 @@ public class managerMemberChangeUI extends JDialog {
 						tmodel.removeRow(i);
 						smb.removeUser(id);
 						smb.endManage();
-						JOptionPane.showMessageDialog(null, "删除成功", "提示",
-								JOptionPane.INFORMATION_MESSAGE);
+						TipBlock block=new TipBlock("删除成功");
+						tippane.add(block);
+						block.show();
+						block=null;
 						break;
 					}
 				}

@@ -12,6 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -20,10 +21,15 @@ import javax.swing.table.DefaultTableModel;
 import express.businessLogic.infoManageBL.OrgForManager;
 import express.businesslogicService.managerBLService.OrgManageBLService;
 import express.po.OrgProperty;
+import express.presentation.mainUI.TipBlock;
+import express.presentation.mainUI.TipBlockError;
 import express.vo.OrganizationVO;
 
 public class managerOrgAddUI extends JDialog {
 
+	
+	
+	private JPanel tippane;
 	private JButton ok, exit;
 	private JTextField orgnametf, orgidtf, citytf, orgaddtf;
 	private JComboBox orgtypecb;
@@ -41,8 +47,9 @@ public class managerOrgAddUI extends JDialog {
 
 		int leftside1 = 10;
 		int leftside2 = 100;
-		Font font = new Font("楷体", Font.PLAIN, 18);
-		Font f = new Font("仿宋", Font.PLAIN, 16);
+		Font font = new Font("幼圆", Font.PLAIN, 20);
+		Font f = new Font("方正隶变简体", Font.PLAIN, 18);
+		Font buttonfont = new Font("隶书", Font.PLAIN, 18);
 		tmodel = tablemodel;
 		omg = new OrgForManager();
 
@@ -104,14 +111,24 @@ public class managerOrgAddUI extends JDialog {
 		ok = new JButton("确认");
 		ok.setBounds(30, 225, 100, 30);
 		ok.addMouseListener(lis);
-		ok.setFont(font);
+		ok.setFont(buttonfont);
 		this.add(ok);
 
 		exit = new JButton("取消");
 		exit.setBounds(160, 225, 100, 30);
 		exit.addMouseListener(lis);
-		exit.setFont(font);
+		exit.setFont(buttonfont);
 		this.add(exit);
+		
+		tippane=new JPanel();
+		 tippane.setSize(850,40);
+		tippane.setLocation(0, 660);
+		tippane.setBackground(Color.white);
+		tippane.setLayout(null);
+		this.add(tippane);
+		
+		
+		
 	}
 
 	private class Foclistener implements FocusListener {
@@ -203,13 +220,19 @@ public class managerOrgAddUI extends JDialog {
 								orgadd, orgpro, orgid);
 						vo.setOrgProperty(vo.typetran(orgtype));
 						omg.addOrgInfo(vo);
-						JOptionPane.showMessageDialog(null, "添加成功", "提示",
-								JOptionPane.INFORMATION_MESSAGE);
+						TipBlock block=new TipBlock("添加成功");
+						tippane.add(block);
+						block.show();
+						block=null;
+						
+						
 						omg.endManage();
 						dispose();
 					} else {
-						JOptionPane.showMessageDialog(null, result, "提示",
-								JOptionPane.WARNING_MESSAGE);
+						TipBlockError block=new TipBlockError("Error");
+						tippane.add(block);
+						block.show();
+						block=null;
 					}
 				}else{
 					JOptionPane.showMessageDialog(null, "信息未填写完整", "提示",

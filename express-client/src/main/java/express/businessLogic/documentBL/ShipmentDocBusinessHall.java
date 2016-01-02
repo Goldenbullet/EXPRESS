@@ -190,7 +190,7 @@ public class ShipmentDocBusinessHall implements BusinessSaleShipmentDocumentblSe
 		ShipmentDocBusinessHallPO po=new ShipmentDocBusinessHallPO(vo.getDate(), vo.getTransId(),
 				vo.getBusinessHallNum(), vo.getArrivalPlace(), vo.getVanID(), vo.getCheckMan(), vo.getTransMan(),
 				vo.getAllOrder(), vo.getMoney(), vo.getShipmentID(),vo.getStartPlace());
-		
+		po.setState(true);
 		try{
 			rmiObj.changeBusinessHallShipmentDoc(po);
 			return true;

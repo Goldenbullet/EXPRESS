@@ -9,12 +9,15 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import express.businessLogic.infoManageBL.Admin;
 import express.businesslogicService.adminBLService.AdminBLService;
 import express.po.UserRole;
+import express.presentation.mainUI.TipBlock;
+import express.presentation.mainUI.TipBlockEmpty;
 import express.vo.UserInfoAdminVO;
 
 public class AdminAddUI extends JDialog {
@@ -26,16 +29,19 @@ public class AdminAddUI extends JDialog {
 	private UserRole posit;
 	private Object[] values;
 	private DefaultTableModel tmodel;
-
+	
 	public AdminAddUI(DefaultTableModel tablemodel) {
+		
+		
 		this.setTitle("添加用户信息");
 		this.setLayout(null);
 		this.setSize(300, 250);
 		this.setLocationRelativeTo(null);
 
 		tmodel = tablemodel;
-		Font font = new Font("楷体", Font.PLAIN, 18);
-		Font f = new Font("仿宋", Font.PLAIN, 16);
+		Font font = new Font("幼圆", Font.PLAIN, 20);
+		Font f = new Font("方正隶变简体", Font.PLAIN, 18);
+		Font buttonf = new Font("隶书", Font.PLAIN, 18);
 
 		String[] pos = { "快递员", "管理员", "总经理", "普通财务人员", "最高权限财务人员",
 				"中转中心仓库管理人员", "中转中心业务员", "营业厅业务员" };
@@ -57,7 +63,7 @@ public class AdminAddUI extends JDialog {
 		this.add(positionl);
 
 		positioncb = new JComboBox(pos);
-		positioncb.setBounds(70, 45, 120, 30);
+		positioncb.setBounds(70, 45, 180, 30);
 		positioncb.setFont(f);
 		this.add(positioncb);
 
@@ -83,13 +89,13 @@ public class AdminAddUI extends JDialog {
 
 		ok = new JButton("确认");
 		ok.setBounds(30, 170, 100, 30);
-		ok.setFont(font);
+		ok.setFont(buttonf);
 		ok.addMouseListener(lis);
 		this.add(ok);
 
 		exit = new JButton("取消");
 		exit.setBounds(150, 170, 100, 30);
-		exit.setFont(font);
+		exit.setFont(buttonf);
 		exit.addMouseListener(lis);
 		this.add(exit);
 	}
@@ -106,14 +112,25 @@ public class AdminAddUI extends JDialog {
 				id = idtf.getText();
 				key = keytf.getText();
 				Object[] temp = { false, name, position, id, key };
+				
+				System.out.println("添加时："+position);
+				
 				values = temp;
 				
 				if (name.isEmpty() || id.isEmpty() || key.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "信息未填写完整", "提示",
 							JOptionPane.ERROR_MESSAGE);
+				
+					
+					
 				} else {	
 					
-					posit = UserRole.values()[positioncb.getSelectedIndex()];
+					posit = UserRole.values()[positioncb.getSelectedIndex()+1];
+					
+					System.out.println("positioncb.getSelectedIndex()："+positioncb.getSelectedIndex());
+					
+					
+					
 					UserInfoAdminVO vo = new UserInfoAdminVO(name, id, posit,
 							key);
 					AdminBLService abs = new Admin();

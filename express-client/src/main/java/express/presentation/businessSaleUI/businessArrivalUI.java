@@ -26,10 +26,14 @@ import express.businesslogicService.businessSaleBLService.BusinessSaleArrivalDoc
 import express.po.GoodsArrivalStatus;
 import express.presentation.mainUI.DateChooser;
 import express.presentation.mainUI.MainUIService;
+import express.presentation.mainUI.TipBlock;
+import express.presentation.mainUI.TipBlockEmpty;
+import express.presentation.mainUI.TipBlockError;
 import express.vo.ArrivalDocBusinessHallVO;
 
 public class businessArrivalUI extends JPanel {
-
+	
+	private JPanel tippane;
 	private JTextField ordertf, startplacetf, datetf, transDocNumtf;
 	private JLabel tip0,tip1, tip2;
 	private JButton button_confirm;
@@ -49,8 +53,8 @@ public class businessArrivalUI extends JPanel {
 		int labellength = 100;
 		int labelwidth = 30;
 
-		Font font = new Font("楷体", Font.PLAIN, 18);
-		Font f = new Font("仿宋", Font.PLAIN, 16);
+		Font font = new Font("幼圆", Font.PLAIN, 20);
+		Font f = new Font("方正隶变简体", Font.PLAIN, 18);
 		Font buttonfont = new Font("隶书", Font.PLAIN, 18);
 
 		setLayout(null);
@@ -155,16 +159,26 @@ public class businessArrivalUI extends JPanel {
 		tip2.setForeground(Color.RED);
 
 		button_confirm = new JButton("确定");
-		button_confirm.setBounds(250, 520, 100, 30);
+		button_confirm.setBounds(200, 520, 100, 30);
 		button_confirm.setFont(buttonfont);
 		button_confirm.addMouseListener(listener);
 		this.add(button_confirm);
 
 		button_cancel = new JButton("取消");
-		button_cancel.setBounds(380, 520, 100, 30);
+		button_cancel.setBounds(350, 520, 100, 30);
 		button_cancel.setFont(buttonfont);
 		button_cancel.addMouseListener(listener);
 		this.add(button_cancel);
+		
+		tippane=new JPanel();
+		 tippane.setSize(850,40);
+		tippane.setLocation(0, 660);
+		tippane.setBackground(Color.white);
+		tippane.setLayout(null);
+		this.add(tippane);
+		
+		
+		
 		
 		this.addMouseListener(listener);
 	}
@@ -241,17 +255,23 @@ public class businessArrivalUI extends JPanel {
 					ArrivalDocBusinessHallVO vo = new ArrivalDocBusinessHallVO(
 							date, transDocNum, startplace, status, order);
 					if (bsad.addArrivalDoc(vo)) {
-						JOptionPane.showMessageDialog(null, "到达单生成成功", "提示",
-								JOptionPane.INFORMATION_MESSAGE);
+						TipBlock block=new TipBlock("生成到达单成功");
+						tippane.add(block);
+						block.show();
+						block=null;
 						bsad.endArrivalDoc();
 					} else {
 						add(tip1);
-						JOptionPane.showMessageDialog(null, "订单号错误", "错误",
-								JOptionPane.ERROR_MESSAGE);
+						TipBlockError block=new TipBlockError("订单条形码号错误");
+						tippane.add(block);
+						block.show();
+						block=null;
 					}
 				}else{
-					JOptionPane.showMessageDialog(null, "信息未填写完整", "提示",
-							JOptionPane.ERROR_MESSAGE);
+					TipBlockEmpty block=new TipBlockEmpty("信息未填写完整");
+					tippane.add(block);
+					block.show();
+					block=null;
 				}
 				complete = true;
 			}
